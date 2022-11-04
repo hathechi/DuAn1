@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app_fluter/screen_page/register_screen.dart';
 import 'home_screen.dart';
 
 class Home extends StatefulWidget {
@@ -12,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _formKey = GlobalKey<FormState>();
   bool _isShow = false;
+  bool checkbox = false;
   final _controllerUser = TextEditingController();
   final _controllerPass = TextEditingController();
   @override
@@ -20,6 +24,9 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
         body: Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: double.infinity,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -29,28 +36,18 @@ class _HomeState extends State<Home> {
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Container(
+                        child: Image.asset("assets/images/logo_login.png")),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                       child: Container(
-                          width: 70,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color.fromARGB(255, 232, 229, 230)),
-                          child: const FlutterLogo()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
-                      child: Container(
-                        child: const Text(
-                          "HELLO\nWELCOME BACK !",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w200,
+                        child: Text(
+                          "Create Your Account",
+                          style: GoogleFonts.comfortaa(
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
-                            fontSize: 40,
+                            fontSize: 28,
                           ),
                         ),
                       ),
@@ -70,12 +67,22 @@ class _HomeState extends State<Home> {
                             return null;
                           },
                           decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Color.fromARGB(255, 245, 245, 245),
+                              prefixIcon: Icon(
+                                FontAwesomeIcons.user,
+                                size: 18,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
                               ),
                               labelText: 'USERNAME',
-                              labelStyle: TextStyle(fontSize: 14)),
+                              labelStyle: TextStyle(fontSize: 12)),
                         )),
                     Container(
                         child: TextFormField(
@@ -93,6 +100,12 @@ class _HomeState extends State<Home> {
                       controller: _controllerPass,
                       obscureText: _isShow,
                       decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 245, 245, 245),
+                          prefixIcon: const Icon(
+                            FontAwesomeIcons.lock,
+                            size: 16,
+                          ),
                           suffixIcon: GestureDetector(
                               onTap: () {
                                 _clickShowPass();
@@ -105,23 +118,46 @@ class _HomeState extends State<Home> {
                                       Icons.visibility_off,
                                     )),
                           border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                           labelText: 'PASSWORD',
-                          labelStyle: const TextStyle(fontSize: 14)),
+                          labelStyle: const TextStyle(fontSize: 12)),
                     )),
+                    Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      alignment: Alignment.centerLeft,
+                      child: CheckboxListTile(
+                        onChanged: (value) {
+                          setState(() {
+                            checkbox = value!;
+                            print(checkbox);
+                          });
+                        },
+                        value: checkbox,
+                        title: Text(
+                          'Remember me',
+                          style: GoogleFonts.comfortaa(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        activeColor: Colors.black,
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 30),
+                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
                       child: SizedBox(
                         width: double.infinity,
                         height: 56,
                         child: ElevatedButton(
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(130)))),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              elevation: 8,
+                              shape: (RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(130)))),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               onClickSignIn();
@@ -134,25 +170,114 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        '------ or continue with ------',
+                        style:
+                            GoogleFonts.comfortaa(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                                color: const Color.fromARGB(255, 199, 198, 198),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                FontAwesomeIcons.google,
+                                size: 40,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 80,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                                color: const Color.fromARGB(255, 199, 198, 198),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                FontAwesomeIcons.facebook,
+                                size: 40,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 80,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                                color: const Color.fromARGB(255, 199, 198, 198),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                FontAwesomeIcons.apple,
+                                size: 42,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const [
-                            Text(
-                              "NEW USER? SIGN UP ",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Register()),
+                                );
+                              },
+                              child: Text(
+                                "NEW USER? SIGN UP ",
+                                style: GoogleFonts.comfortaa(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             Text(
                               "FORGOT PASSWORD",
-                              style: TextStyle(
+                              style: GoogleFonts.comfortaa(
+                                fontSize: 13,
                                 color: Colors.blue,
-                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
                               ),
-                            )
+                            ),
                           ]),
                     )
                   ],

@@ -32,7 +32,7 @@ class _PageHomeState extends State<PageHome> {
                           child: CircleAvatar(
                             backgroundColor: Colors.grey,
                             child: Image.asset(
-                              'assets/khi.png',
+                              'assets/images/khi.png',
                             ),
                           ),
                         ),
@@ -112,7 +112,7 @@ class _PageHomeState extends State<PageHome> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          child: Image.asset('assets/logo.png'),
+                          child: Image.asset('assets/images/logo.png'),
                         ),
                         Container(
                           height: 60,
