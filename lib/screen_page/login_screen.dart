@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app_fluter/screen_page/forgotpassword_screen.dart';
 import 'package:my_app_fluter/screen_page/register_screen.dart';
 import 'home_screen.dart';
 
@@ -261,21 +262,42 @@ class _HomeState extends State<Home> {
                                       builder: (context) => const Register()),
                                 );
                               },
-                              child: Text(
-                                "NEW USER? SIGN UP ",
-                                style: GoogleFonts.comfortaa(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
+                              child: RichText(
+                                text: TextSpan(
+                                  style: GoogleFonts.comfortaa(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: const [
+                                    TextSpan(
+                                      text: 'NEW USER? ',
+                                    ),
+                                    TextSpan(
+                                      text: 'SIGN UP',
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 16),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Text(
-                              "FORGOT PASSWORD",
-                              style: GoogleFonts.comfortaa(
-                                fontSize: 13,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ForgotPassWord()),
+                                );
+                              },
+                              child: Text(
+                                "FORGOT PASSWORD",
+                                style: GoogleFonts.comfortaa(
+                                  fontSize: 13,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ]),

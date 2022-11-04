@@ -8,6 +8,7 @@ Future<void> main() async {
   //Thêm 2 dòng cho FireBase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'ShoesStore',
       theme: ThemeData(fontFamily: 'comfortaa'),
       home: const Home(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

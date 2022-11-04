@@ -25,15 +25,14 @@ class _RegisterState extends State<Register> {
   final _controllerEmail = TextEditingController();
   final _controllerDate = TextEditingController();
 
+  //Lấy hình từ thư viện máy
   File? image;
 
   Future getImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
-
       final imageTemp = File(image.path);
-
       setState(() {
         this.image = imageTemp;
       });
@@ -44,7 +43,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
         appBar: AppBar(
@@ -74,7 +73,7 @@ class _RegisterState extends State<Register> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Container(
                             child: Text(
                               "Register for free !",
@@ -331,7 +330,7 @@ class _RegisterState extends State<Register> {
                                     ),
                                   ),
                                   labelText: 'BIRTH DAY',
-                                  labelStyle: const TextStyle(fontSize: 12)),
+                                  labelStyle: TextStyle(fontSize: 12)),
                             )),
                         Container(
                           padding: const EdgeInsets.only(top: 10),

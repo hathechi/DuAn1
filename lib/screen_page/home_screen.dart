@@ -43,24 +43,24 @@ class _MyClassState extends State<MyClass> {
           items: [
             SalomonBottomBarItem(
                 icon: const Icon(FontAwesomeIcons.house),
-                title: Text('Home'),
+                title: const Text('Home'),
                 selectedColor: Colors.pinkAccent,
-                unselectedColor: Color.fromARGB(255, 243, 135, 171)),
+                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
             SalomonBottomBarItem(
                 icon: const Icon(FontAwesomeIcons.cartShopping),
-                title: Text('Cart'),
+                title: const Text('Cart'),
                 selectedColor: Colors.pinkAccent,
-                unselectedColor: Color.fromARGB(255, 243, 135, 171)),
+                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
             SalomonBottomBarItem(
                 icon: const Icon(FontAwesomeIcons.solidHeart),
-                title: Text('Likes'),
+                title: const Text('Likes'),
                 selectedColor: Colors.pinkAccent,
-                unselectedColor: Color.fromARGB(255, 243, 135, 171)),
+                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
             SalomonBottomBarItem(
                 icon: const Icon(FontAwesomeIcons.solidUser),
-                title: Text('Profile'),
+                title: const Text('Profile'),
                 selectedColor: Colors.pinkAccent,
-                unselectedColor: Color.fromARGB(255, 243, 135, 171)),
+                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
           ]),
     );
   }
