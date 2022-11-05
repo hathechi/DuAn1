@@ -1,5 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
 import 'package:my_app_fluter/screen_page/test.dart';
 
 class PageHome extends StatefulWidget {
@@ -10,6 +12,7 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
+  bool _isClickLike = false;
   //function delay
   Future<void> delay(int millis) async {
     await Future.delayed(Duration(milliseconds: millis));
@@ -20,6 +23,7 @@ class _PageHomeState extends State<PageHome> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -105,54 +109,18 @@ class _PageHomeState extends State<PageHome> {
                   ),
                 ),
                 Container(
-                  height: 300,
-                  padding: const EdgeInsets.only(top: 20),
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        children: [
-                          Card(
-                            margin: const EdgeInsets.all(10),
-                            color: const Color.fromARGB(255, 215, 215, 215),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Image.asset('assets/images/logo.png'),
-                          ),
-                          Positioned(
-                            top: 20,
-                            left: 20,
-                            child: Container(
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                  color: Colors.amber,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              padding: const EdgeInsets.all(20),
-                              child: Text(
-                                '302$index \$',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  padding: const EdgeInsets.only(top: 10),
+                  child: _slider(),
                 ),
                 Container(
-                  height: 200,
                   padding: const EdgeInsets.only(top: 10),
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 4),
                     itemCount: 7,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
@@ -170,7 +138,7 @@ class _PageHomeState extends State<PageHome> {
                                     scale: 3,
                                   )
                                 : Image.asset(
-                                    'assets/images/reebok.png',
+                                    'assets/images/puma.png',
                                     scale: 3,
                                   ),
                           ),
@@ -190,23 +158,28 @@ class _PageHomeState extends State<PageHome> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 20),
-                  height: 780,
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
+                      crossAxisCount: 2,
+                      mainAxisExtent: 250,
+                    ),
                     scrollDirection: Axis.vertical,
                     itemCount: 10,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          print(index);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductDetail(index: index)),
+                          );
                         },
                         child: Container(
                           margin: const EdgeInsets.all(5),
-                          width: MediaQuery.of(context).size.width,
-                          height: 400,
-                          // color: Color.fromARGB(255, 192, 126, 126),
                           child: Stack(
                             children: [
                               Positioned(
@@ -214,7 +187,8 @@ class _PageHomeState extends State<PageHome> {
                                 child: Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.45,
-                                  height: 150,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.4,
                                   alignment: Alignment.bottomLeft,
                                   decoration: const BoxDecoration(
                                     color: Color.fromARGB(255, 231, 231, 231),
@@ -261,6 +235,26 @@ class _PageHomeState extends State<PageHome> {
                                         width: 200,
                                         height: 180,
                                       ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isClickLike = !_isClickLike;
+                                    });
+                                  },
+                                  icon: _isClickLike
+                                      ? const Icon(
+                                          FontAwesomeIcons.heartCircleCheck,
+                                          color: Colors.pink,
+                                        )
+                                      : const Icon(
+                                          FontAwesomeIcons.heart,
+                                          color: Colors.pink,
+                                        ),
+                                ),
                               )
                             ],
                           ),
@@ -268,11 +262,61 @@ class _PageHomeState extends State<PageHome> {
                       );
                     },
                   ),
-                )
+                ),
+                // _slider(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _slider() {
+    return CarouselSlider.builder(
+      itemCount: 10,
+      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+          Container(
+        child: Stack(
+          children: [
+            Card(
+              margin: const EdgeInsets.all(10),
+              color: const Color.fromARGB(255, 234, 234, 234),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Image.asset('assets/images/logo.png'),
+            ),
+            Positioned(
+              top: 20,
+              right: 20,
+              child: Container(
+                height: 60,
+                decoration: const BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  '30$itemIndex.00 \$',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      options: CarouselOptions(
+        height: 300.0,
+        viewportFraction: 1,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        enlargeStrategy: CenterPageEnlargeStrategy.scale,
       ),
     );
   }

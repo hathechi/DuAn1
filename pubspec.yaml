@@ -45,7 +45,7 @@ dependencies:
   image_picker: ^0.8.6
   flutter_native_splash: ^2.2.13
   flutter_launcher_icons: "^0.10.0"
-  
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:

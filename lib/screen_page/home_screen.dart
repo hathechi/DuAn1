@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/screen_page/cart_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'home_page.dart';
 
@@ -22,9 +23,7 @@ class _MyClassState extends State<MyClass> {
         index: _curentIndex,
         children: [
           const PageHome(),
-          Container(
-            color: Colors.red,
-          ),
+          const CartPage(),
           Container(
             color: Colors.pink,
           ),
