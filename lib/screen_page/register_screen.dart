@@ -409,7 +409,7 @@ class _RegisterState extends State<Register> {
   void onClickSignIn() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const MyClass()),
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
   }
 

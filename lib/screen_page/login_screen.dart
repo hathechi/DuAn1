@@ -6,14 +6,14 @@ import 'package:my_app_fluter/screen_page/forgotpassword_screen.dart';
 import 'package:my_app_fluter/screen_page/register_screen.dart';
 import 'home_screen.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Login> createState() => _LoginState();
 }
 
-class _HomeState extends State<Home> {
+class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _isShow = false;
   bool checkbox = false;
@@ -321,7 +321,7 @@ class _HomeState extends State<Home> {
   void onClickSignIn() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const MyClass()),
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
   }
 

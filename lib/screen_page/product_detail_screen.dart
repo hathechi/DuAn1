@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/screen_page/cart_page.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
 
 class ProductDetail extends StatefulWidget {
   final int index;
@@ -16,6 +18,13 @@ class _ProductDetailState extends State<ProductDetail> {
   int count = 1;
   int currentSize = 0;
   int currentColor = 0;
+  List<ChoiceColor> listColor = [
+    ChoiceColor(Colors.black),
+    ChoiceColor(Colors.grey),
+    ChoiceColor(Colors.pink),
+    ChoiceColor(Colors.blue.shade900),
+    ChoiceColor(Colors.amber),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,13 @@ class _ProductDetailState extends State<ProductDetail> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              pushScreen(
+                  context,
+                  const CartPage(
+                    fromToDetail: true,
+                  ));
+            },
             icon: const Icon(
               FontAwesomeIcons.cartArrowDown,
               size: 28,
@@ -41,154 +56,168 @@ class _ProductDetailState extends State<ProductDetail> {
               const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: 400,
-                    child: Image.asset('assets/images/giay2.png'),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 244, 244, 244),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                    ),
+      body: Hero(
+        tag: widget.index,
+        child: Builder(builder: (context) {
+          return Material(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Air Jodan 3 Retro",
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isClickLike = !_isClickLike;
-                                  });
-                                },
-                                icon: _isClickLike
-                                    ? const Icon(
-                                        FontAwesomeIcons.heartCircleCheck,
-                                        color: Colors.pink,
-                                      )
-                                    : const Icon(
-                                        FontAwesomeIcons.heart,
-                                        color: Colors.pink,
-                                      ),
-                              ),
-                            ],
-                          ),
+                        Container(
+                          height: 400,
+                          child: Image.asset('assets/images/giay2.png'),
                         ),
-                        const ListTile(
-                          title: Padding(
-                            padding: EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              'Description',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 238, 238, 238),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
                             ),
                           ),
-                          subtitle: Text(
-                            'Browse to find the images that fit your needs and click to download.\nUse the on-the-fly color image generation to match your brand identity. ',
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                height: 100,
-                                child: Column(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 16.0, left: 15, right: 15),
+                                child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                      MainAxisAlignment.spaceBetween,
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Text(
-                                        "Size",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
+                                    const Text(
+                                      "Air Jodan 3 Retro",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    _chooseSize(),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isClickLike = !_isClickLike;
+                                        });
+                                      },
+                                      icon: _isClickLike
+                                          ? const Icon(
+                                              FontAwesomeIcons.heartCircleCheck,
+                                              color: Colors.pink,
+                                            )
+                                          : const Icon(
+                                              FontAwesomeIcons.heart,
+                                              color: Colors.pink,
+                                            ),
+                                    ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: _chooseColor(),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Quantity',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                              const ListTile(
+                                title: Padding(
+                                  padding: EdgeInsets.only(bottom: 8.0),
+                                  child: Text(
+                                    'Description',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                                subtitle: Text(
+                                  'Browse to find the images that fit your needs and click to download.\nUse the on-the-fly color image generation to match your brand identity. ',
+                                ),
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromARGB(255, 202, 202, 202),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20))),
-                                  width: 100,
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            if (count != 1) {
-                                              count--;
-                                            }
-                                          });
-                                        },
-                                        icon:
-                                            const Icon(FontAwesomeIcons.minus),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      height: 100,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(left: 15),
+                                            child: Text(
+                                              "Size",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                          _chooseSize(),
+                                        ],
                                       ),
-                                      Text(
-                                        '$count',
-                                        style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            count++;
-                                          });
-                                        },
-                                        icon: const Icon(FontAwesomeIcons.plus),
-                                      ),
-                                    ],
+                                    ),
                                   ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: _chooseColor(),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                  children: [
+                                    const Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        'Quantity',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 202, 202, 202),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        width: 100,
+                                        alignment: Alignment.center,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  if (count != 1) {
+                                                    count--;
+                                                  }
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                  FontAwesomeIcons.minus),
+                                            ),
+                                            Text(
+                                              '$count',
+                                              style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  count++;
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                  FontAwesomeIcons.plus),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -197,54 +226,54 @@ class _ProductDetailState extends State<ProductDetail> {
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(15),
-            color: const Color.fromARGB(255, 244, 244, 244),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: ListTile(
-                    title: const Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
-                      child: Text('Total Price'),
-                    ),
-                    subtitle: Text(
-                      '\$10$count.0',
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    height: 56,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(FontAwesomeIcons.cartShopping),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          elevation: 8,
-                          shape: (RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(130)))),
-                      onPressed: () {},
-                      label: const Text(
-                        '    ADD TO CART',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  color: const Color.fromARGB(255, 244, 244, 244),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ListTile(
+                          title: const Padding(
+                            padding: EdgeInsets.only(bottom: 8.0),
+                            child: Text('Total Price'),
+                          ),
+                          subtitle: Text(
+                            '\$10$count.0',
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          height: 56,
+                          child: ElevatedButton.icon(
+                            icon: const Icon(FontAwesomeIcons.cartShopping),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                elevation: 8,
+                                shape: (RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(130)))),
+                            onPressed: () {},
+                            label: const Text(
+                              '    ADD TO CART',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+          );
+        }),
       ),
     );
   }
@@ -310,8 +339,9 @@ class _ProductDetailState extends State<ProductDetail> {
             height: 50,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: listColor.length,
               itemBuilder: (context, index) {
+                var color = listColor[index];
                 return InkWell(
                   onTap: () {
                     setState(() {
@@ -322,22 +352,18 @@ class _ProductDetailState extends State<ProductDetail> {
                     width: 40,
                     margin:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 246, 124, 223),
-                      borderRadius: BorderRadius.all(
+                    decoration: BoxDecoration(
+                      color: color.mColor,
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(100),
                       ),
                     ),
                     child: currentColor == index
-                        ? Icon(FontAwesomeIcons.check)
+                        ? const Icon(
+                            FontAwesomeIcons.check,
+                            color: Colors.white,
+                          )
                         : null,
-                    // IconButton(
-                    //   iconSize: 20,
-                    //   alignment: Alignment.center,
-                    //   padding: const EdgeInsets.all(10),
-                    //   icon: const Icon(FontAwesomeIcons.check),
-                    //   onPressed: () {},
-                    // ),
                   ),
                 );
               },
@@ -347,4 +373,10 @@ class _ProductDetailState extends State<ProductDetail> {
       ),
     );
   }
+}
+
+class ChoiceColor {
+  final Color? mColor;
+
+  ChoiceColor(this.mColor);
 }

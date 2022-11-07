@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ShoesStore',
       theme: ThemeData(fontFamily: 'comfortaa'),
-      home: const Home(),
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

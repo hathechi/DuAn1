@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
 import 'package:my_app_fluter/screen_page/test.dart';
 
+import '../utils/push_screen.dart';
+
 class PageHome extends StatefulWidget {
   const PageHome({super.key});
 
@@ -23,7 +25,7 @@ class _PageHomeState extends State<PageHome> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -120,7 +122,7 @@ class _PageHomeState extends State<PageHome> {
                             crossAxisCount: 4),
                     itemCount: 7,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
@@ -167,98 +169,106 @@ class _PageHomeState extends State<PageHome> {
                     scrollDirection: Axis.vertical,
                     itemCount: 10,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductDetail(index: index)),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  alignment: Alignment.bottomLeft,
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 231, 231, 231),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 8),
-                                        child: Text(
-                                          'Running Shoes',
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          '\$60.00',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                      return Hero(
+                        tag: index,
+                        child: Builder(builder: (context) {
+                          return Material(
+                            child: InkWell(
+                              onTap: () {
+                                pushScreen(
+                                    context, ProductDetail(index: index));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(5),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      bottom: 0,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        alignment: Alignment.bottomLeft,
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromARGB(
+                                              255, 231, 231, 231),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Text('Running Shoes'),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                child: index % 2 == 0
-                                    ? Image.asset(
-                                        'assets/images/giay1.png',
-                                        width: 200,
-                                        height: 180,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/giay3.png',
-                                        width: 200,
-                                        height: 180,
-                                      ),
-                              ),
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isClickLike = !_isClickLike;
-                                    });
-                                  },
-                                  icon: _isClickLike
-                                      ? const Icon(
-                                          FontAwesomeIcons.heartCircleCheck,
-                                          color: Colors.pink,
-                                        )
-                                      : const Icon(
-                                          FontAwesomeIcons.heart,
-                                          color: Colors.pink,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8),
+                                              child: Text(
+                                                'Running Shoes',
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '\$60.00',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        // Text('Running Shoes'),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      child: index % 2 == 0
+                                          ? Image.asset(
+                                              'assets/images/giay1.png',
+                                              width: 200,
+                                              height: 180,
+                                            )
+                                          : Image.asset(
+                                              'assets/images/giay3.png',
+                                              width: 200,
+                                              height: 180,
+                                            ),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _isClickLike = !_isClickLike;
+                                          });
+                                        },
+                                        icon: _isClickLike
+                                            ? const Icon(
+                                                FontAwesomeIcons
+                                                    .heartCircleCheck,
+                                                color: Colors.pink,
+                                              )
+                                            : const Icon(
+                                                FontAwesomeIcons.heart,
+                                                color: Colors.pink,
+                                              ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        }),
                       );
                     },
                   ),

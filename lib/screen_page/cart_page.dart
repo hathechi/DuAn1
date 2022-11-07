@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  final bool fromToDetail;
+  const CartPage({super.key, required this.fromToDetail});
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -31,91 +33,27 @@ class _CartPageState extends State<CartPage> {
         ),
         elevation: 0,
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.fromToDetail,
       ),
       body: Container(
         color: Colors.white,
         child: Column(
           children: [
             Expanded(
-                child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 7,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: 150,
-                          margin: const EdgeInsets.all(10),
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              color: Color.fromARGB(255, 236, 236, 236)),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    color: Color.fromARGB(255, 255, 249, 237),
-                                  ),
-                                  child: Image.asset('assets/images/giay1.png'),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Air Jodan 3 Retro',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              FontAwesomeIcons.trashCan,
-                                              size: 22,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: const Text(
-                                          'Black  |  Size = 42',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: _quantily(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    ))),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 7,
+                  itemBuilder: (context, index) {
+                    return _itemCart();
+                  },
+                ),
+              ),
+            ),
             Container(
               padding: const EdgeInsets.all(15),
               decoration: const BoxDecoration(
@@ -242,6 +180,95 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _itemCart() {
+    return Slidable(
+      key: UniqueKey(),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        dismissible: DismissiblePane(onDismissed: () {}),
+        children: [
+          SlidableAction(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20),
+            ),
+            spacing: 10,
+            onPressed: (context) {},
+            backgroundColor: const Color.fromARGB(255, 245, 55, 55),
+            // foregroundColor: Colors.white,
+            icon: FontAwesomeIcons.trashCan,
+            label: 'DELETE',
+          ),
+        ],
+      ),
+      child: Container(
+        height: 150,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+          color: Color.fromARGB(255, 182, 198, 217),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                  color: Color.fromARGB(255, 251, 227, 220),
+                ),
+                child: Image.asset('assets/images/giay1.png'),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Air Jodan 3 Retro',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            FontAwesomeIcons.trashCan,
+                            size: 22,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Black  |  Size = 42',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: _quantily(),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -201,7 +201,7 @@ class _CreateNewPassState extends State<CreateNewPass> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Home()));
+                                        builder: (context) => const Login()));
                               },
                               child: const Text(
                                 'SIGN IN',
