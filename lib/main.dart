@@ -1,5 +1,7 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
 import 'screen_page/login_screen.dart';
 import 'screen_page/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,7 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ShoesStore',
-      theme: ThemeData(fontFamily: 'comfortaa'),
+      navigatorKey: navKey,
+      theme: ThemeData(primarySwatch: Colors.pink, fontFamily: 'comfortaa'),
+      builder: BotToastInit(), //1. call BotToastInit
+      navigatorObservers: [BotToastNavigatorObserver()],
       home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );

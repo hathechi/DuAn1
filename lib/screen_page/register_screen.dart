@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../utils/push_screen.dart';
 import 'home_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -43,8 +44,6 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -379,7 +378,7 @@ class _RegisterState extends State<Register> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
                           child: InkWell(
-                            onTap: () => Navigator.pop(context),
+                            onTap: () => pop(),
                             child: Text(
                               " SIGN IN NOW! ",
                               style: GoogleFonts.comfortaa(

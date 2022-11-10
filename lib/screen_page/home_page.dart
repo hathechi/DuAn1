@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/modal/brand.dart';
+import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
 import 'package:my_app_fluter/screen_page/test.dart';
 
@@ -14,6 +17,15 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
+  //Đường dẫn
+  final CollectionReference _brands =
+      FirebaseFirestore.instance.collection('brand');
+
+  late Product product;
+  //Đường dẫn
+  final CollectionReference _products =
+      FirebaseFirestore.instance.collection('product');
+
   bool _isClickLike = false;
   //function delay
   Future<void> delay(int millis) async {
@@ -116,39 +128,49 @@ class _PageHomeState extends State<PageHome> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 10),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4),
-                    itemCount: 7,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 226, 226, 226),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100))),
-                            margin: const EdgeInsets.only(bottom: 5),
-                            child: index % 2 == 0
-                                ? Image.asset(
-                                    'assets/images/nike-logo.png',
-                                    scale: 3,
-                                  )
-                                : Image.asset(
-                                    'assets/images/puma.png',
-                                    scale: 3,
+                  child: StreamBuilder(
+                      stream: _brands.snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4),
+                            itemCount: streamSnapshot.data!.docs.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              return Column(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: const BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 226, 226, 226),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100))),
+                                    margin: const EdgeInsets.only(bottom: 5),
+                                    child: Image.network(
+                                      documentSnapshot['urlImage'],
+                                      scale: 3,
+                                    ),
                                   ),
-                          ),
-                          const Text("Nike"),
-                        ],
-                      );
-                    },
-                  ),
+                                  Text(
+                                    documentSnapshot['tenthuonghieu'],
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                        return const Card();
+                      }),
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 20),
@@ -160,118 +182,133 @@ class _PageHomeState extends State<PageHome> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 20),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisExtent: 250,
-                    ),
-                    scrollDirection: Axis.vertical,
-                    itemCount: 10,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Hero(
-                        tag: index,
-                        child: Builder(builder: (context) {
-                          return Material(
-                            child: InkWell(
-                              onTap: () {
-                                pushScreen(
-                                    context, ProductDetail(index: index));
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(5),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      bottom: 0,
+                  child: StreamBuilder(
+                      stream: _products.snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          return GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisExtent: 250,
+                            ),
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data!.docs.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              var mapData = snapshot.data!.docs[index].data()
+                                  as Map<String, dynamic>;
+                              product = Product.fromJson(mapData);
+                              return Hero(
+                                tag: index,
+                                child: Builder(builder: (context) {
+                                  return Material(
+                                    child: InkWell(
+                                      onTap: () {
+                                        pushScreen(context,
+                                            ProductDetail(index: index));
+                                      },
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.45,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        alignment: Alignment.bottomLeft,
-                                        decoration: const BoxDecoration(
-                                          color: Color.fromARGB(
-                                              255, 231, 231, 231),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: const [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 8),
-                                              child: Text(
-                                                'Running Shoes',
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Text(
-                                                '\$60.00',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                        margin: const EdgeInsets.all(5),
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              bottom: 0,
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.45,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                alignment: Alignment.bottomLeft,
+                                                decoration: const BoxDecoration(
+                                                  color: Color.fromARGB(
+                                                      255, 231, 231, 231),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(20),
+                                                  ),
                                                 ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 8),
+                                                      child: Text(
+                                                        product.tensp!,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        '\$' +
+                                                            product.giasp
+                                                                .toString(),
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                // Text('Running Shoes'),
                                               ),
                                             ),
+                                            Positioned(
+                                              top: 0,
+                                              child: Image.network(
+                                                product.urlImage!,
+                                                width: 200,
+                                                height: 180,
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _isClickLike =
+                                                        !_isClickLike;
+                                                  });
+                                                },
+                                                icon: _isClickLike
+                                                    ? const Icon(
+                                                        FontAwesomeIcons
+                                                            .heartCircleCheck,
+                                                        color: Colors.pink,
+                                                      )
+                                                    : const Icon(
+                                                        FontAwesomeIcons.heart,
+                                                        color: Colors.pink,
+                                                      ),
+                                              ),
+                                            )
                                           ],
                                         ),
-                                        // Text('Running Shoes'),
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 0,
-                                      child: index % 2 == 0
-                                          ? Image.asset(
-                                              'assets/images/giay1.png',
-                                              width: 200,
-                                              height: 180,
-                                            )
-                                          : Image.asset(
-                                              'assets/images/giay3.png',
-                                              width: 200,
-                                              height: 180,
-                                            ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _isClickLike = !_isClickLike;
-                                          });
-                                        },
-                                        icon: _isClickLike
-                                            ? const Icon(
-                                                FontAwesomeIcons
-                                                    .heartCircleCheck,
-                                                color: Colors.pink,
-                                              )
-                                            : const Icon(
-                                                FontAwesomeIcons.heart,
-                                                color: Colors.pink,
-                                              ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  );
+                                }),
+                              );
+                            },
                           );
-                        }),
-                      );
-                    },
-                  ),
+                        }
+                        return const Card();
+                      }),
                 ),
                 // _slider(),
               ],

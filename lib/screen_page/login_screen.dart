@@ -21,8 +21,6 @@ class _LoginState extends State<Login> {
   final _controllerPass = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Scaffold(
         body: Container(
       color: Colors.white,
@@ -112,10 +110,10 @@ class _LoginState extends State<Login> {
                                 _clickShowPass();
                               },
                               child: _isShow
-                                  ? Icon(
+                                  ? const Icon(
                                       Icons.visibility,
                                     )
-                                  : Icon(
+                                  : const Icon(
                                       Icons.visibility_off,
                                     )),
                           border: const OutlineInputBorder(

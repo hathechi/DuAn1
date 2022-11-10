@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+var navKey = GlobalKey<NavigatorState>();
+var navKey1 = GlobalKey<FormState>();
+BuildContext get getContext => navKey.currentContext!;
 Future<void> pushScreen(BuildContext context, Widget child) async {
   await Navigator.push(
     context,
@@ -44,5 +47,10 @@ Future<void> pushReplacement(BuildContext context, Widget child) async {
       },
     ),
   );
-  //  CupertinoPageRoute(builder: (context) => child,
+}
+
+void pop() {
+  if (navKey.currentState!.canPop()) {
+    navKey.currentState!.pop();
+  }
 }

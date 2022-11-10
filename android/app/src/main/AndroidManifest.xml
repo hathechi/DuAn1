@@ -2,8 +2,7 @@
     package="com.ngovang.my_app_fluter">
      
    <application
-        android:label="ShoesStore"
-      
+        android:label="ShoesStore"      
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

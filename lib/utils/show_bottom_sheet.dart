@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
 
 void dialogModalBottomsheet(
     BuildContext context, String title, Function function) {
@@ -47,7 +48,7 @@ void dialogModalBottomsheet(
                                 shape: (RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(130)))),
                             onPressed: () {
-                              Navigator.pop(context);
+                              pop();
                             },
                             child: const Text(
                               'CANCEL',
@@ -72,7 +73,6 @@ void dialogModalBottomsheet(
                                     borderRadius: BorderRadius.circular(130)))),
                             onPressed: () {
                               function();
-                           
                             },
                             child: Text(
                               title.toUpperCase(),
