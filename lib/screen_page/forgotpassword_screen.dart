@@ -1,7 +1,13 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:my_app_fluter/screen_page/create_newpass.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 
 class ForgotPassWord extends StatefulWidget {
   const ForgotPassWord({super.key});
@@ -23,7 +29,7 @@ class _ForgotPassWordState extends State<ForgotPassWord> {
             color: Colors.black, //change your color here
           ),
           title: const Text(
-            'Forgot PassWord',
+            'Forgot Password',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white),
@@ -103,11 +109,12 @@ class _ForgotPassWordState extends State<ForgotPassWord> {
                                     borderRadius: BorderRadius.circular(130)))),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CreateNewPass()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const CreateNewPass()));
+                                veryfiEmail();
                               }
                             },
                             child: const Text(
@@ -126,5 +133,19 @@ class _ForgotPassWordState extends State<ForgotPassWord> {
         ),
       ),
     );
+  }
+
+  Future veryfiEmail() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _controllerEmailFogot.text.trim(),
+      );
+      showLoading(1);
+      showToast('Password reset email send ... ', Colors.green);
+      pushAndRemoveUntil(child: const Login());
+    } on FirebaseAuthException catch (e) {
+      log(e.message!);
+      showToast('Có Lỗi Gì Đó Rồi .... ', Colors.red);
+    }
   }
 }

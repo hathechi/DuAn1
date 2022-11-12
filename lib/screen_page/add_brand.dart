@@ -315,7 +315,7 @@ class _bottomAddState extends State<bottomAdd> {
                                               height: 200,
                                             )
                                           : Image.asset(
-                                              "assets/images/nike-logo.png",
+                                              "assets/images/choose.jpg",
                                               fit: BoxFit.cover,
                                             ),
                                 ),

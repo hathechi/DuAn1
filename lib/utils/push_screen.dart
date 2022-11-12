@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:my_app_fluter/screen_page/home_screen.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
 
 var navKey = GlobalKey<NavigatorState>();
 var navKey1 = GlobalKey<FormState>();
 BuildContext get getContext => navKey.currentContext!;
 Future<void> pushScreen(BuildContext context, Widget child) async {
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
   await Navigator.push(
     context,
     PageRouteBuilder(
@@ -28,6 +32,7 @@ Future<void> pushScreen(BuildContext context, Widget child) async {
 }
 
 Future<void> pushReplacement(BuildContext context, Widget child) async {
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
   await Navigator.pushReplacement(
     context,
     PageRouteBuilder(
@@ -53,4 +58,12 @@ void pop() {
   if (navKey.currentState!.canPop()) {
     navKey.currentState!.pop();
   }
+}
+
+void pushAndRemoveUntil({Widget? child}) {
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
+  navKey.currentState!.pushAndRemoveUntil(
+      MaterialPageRoute(
+          builder: (BuildContext context) => child ?? const HomeScreen()),
+      (route) => route is HomeScreen);
 }

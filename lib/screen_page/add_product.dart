@@ -562,26 +562,31 @@ class _BottomAddState extends State<BottomAdd> {
                             },
                             child: Stack(
                               children: [
-                                image != null
-                                    ? Image.file(
-                                        image!,
-                                        fit: BoxFit.contain,
-                                        height: 200,
-                                        width: 200,
-                                      )
-                                    : linkUrl != null
-                                        ? Image.network(
-                                            linkUrl.toString(),
-                                            fit: BoxFit.contain,
-                                            height: 200,
-                                            width: 200,
-                                          )
-                                        : Image.asset(
-                                            "assets/images/khi.png",
-                                            fit: BoxFit.contain,
-                                            height: 200,
-                                            width: 200,
-                                          ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: image != null
+                                      ? Image.file(
+                                          image!,
+                                          fit: BoxFit.contain,
+                                          height: 200,
+                                          width: 200,
+                                        )
+                                      : linkUrl != null
+                                          ? Image.network(
+                                              linkUrl.toString(),
+                                              fit: BoxFit.contain,
+                                              height: 200,
+                                              width: 200,
+                                            )
+                                          : Image.asset(
+                                              "assets/images/choose.jpg",
+                                              fit: BoxFit.contain,
+                                              height: 200,
+                                              width: 200,
+                                            ),
+                                ),
                                 const Positioned(
                                   bottom: 10,
                                   right: 10,
@@ -638,7 +643,7 @@ class _BottomAddState extends State<BottomAdd> {
                                   shape: (RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(130)))),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (widget.title.toString() == 'EDIT') {
                                   if (navKey1.currentState!.validate()) {
                                     if (image == null) {
@@ -664,27 +669,23 @@ class _BottomAddState extends State<BottomAdd> {
                                         },
                                       );
                                     } else {
-                                      isCheckExist(_controllerName.text).then(
-                                        (value) {
-                                          if (value == true) {
-                                            showToast(
-                                                'Tên Sản Phẩm Đã Tồn Tại!',
-                                                Colors.red);
-                                          } else {
-                                            updateDataFireStoreImage(
-                                                image!,
-                                                double.tryParse(
-                                                    _controllerPrice.text)!,
-                                                _controllerDetail.text,
-                                                selectedValue!,
-                                                int.tryParse(
-                                                    _controllerAmount.text)!,
-                                                _controllerName.text,
-                                                widget.product.masp!);
-                                            showLoading(4);
-                                          }
-                                        },
-                                      );
+                                      var isExist = await isCheckExist(
+                                          _controllerName.text);
+                                      if (isExist) {
+                                        showToast('Tên Sản Phẩm Đã Tồn Tại!',
+                                            Colors.red);
+                                        return;
+                                      }
+                                      updateDataFireStoreImage(
+                                          image!,
+                                          double.tryParse(
+                                              _controllerPrice.text)!,
+                                          _controllerDetail.text,
+                                          selectedValue!,
+                                          int.tryParse(_controllerAmount.text)!,
+                                          _controllerName.text,
+                                          widget.product.masp!);
+                                      showLoading(4);
                                     }
                                   }
                                 } else {

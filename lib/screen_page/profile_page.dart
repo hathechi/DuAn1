@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -24,6 +25,36 @@ class _ProfilePageState extends State<ProfilePage> {
   //Lấy hình từ thư viện máy
   File? image;
   List<_ItemMenu> listMenu = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  bool ischeckLogin() {
+    if (_auth.currentUser == null) {
+      return false;
+    }
+    return true;
+  }
+
+  String getNameUser() {
+    if (_auth.currentUser == null) {
+      return 'Guest';
+    }
+    return _auth.currentUser!.displayName!;
+  }
+
+  Widget getAvatar() {
+    if (_auth.currentUser == null) {
+      return Image.asset(
+        'assets/images/avatar.jpg',
+        fit: BoxFit.cover,
+      );
+    }
+    return Image.network(
+      _auth.currentUser!.photoURL!,
+      width: double.infinity,
+      height: double.infinity,
+      fit: BoxFit.cover,
+    );
+  }
 
   @override
   void initState() {
@@ -32,32 +63,43 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _createMenu() {
-    listMenu.add(_ItemMenu(
-      const Icon(FontAwesomeIcons.gears),
-      'Product Management ',
-      onTap: () {
-        pushScreen(context, const AddProduct());
-      },
-    ));
-    listMenu.add(_ItemMenu(
-      const Icon(FontAwesomeIcons.gears),
-      'Brand Management ',
-      onTap: () {
-        pushScreen(context, const AddBrand());
-      },
-    ));
-    listMenu.add(_ItemMenu(
-      const Icon(FontAwesomeIcons.chartLine),
-      'Sales Statistics',
-      onTap: () {},
-    ));
-    listMenu.add(
-      _ItemMenu(
-        const Icon(FontAwesomeIcons.windowRestore),
-        'Receipt',
+    if (ischeckLogin() &&
+        _auth.currentUser!.email == 'thechi1832000@gmail.com') {
+      listMenu.add(_ItemMenu(
+        const Icon(FontAwesomeIcons.gears),
+        'Product Management ',
+        onTap: () {
+          pushScreen(context, const AddProduct());
+        },
+      ));
+      listMenu.add(_ItemMenu(
+        const Icon(FontAwesomeIcons.gears),
+        'Brand Management ',
+        onTap: () {
+          pushScreen(context, const AddBrand());
+        },
+      ));
+      listMenu.add(_ItemMenu(
+        const Icon(FontAwesomeIcons.chartLine),
+        'Sales Statistics',
         onTap: () {},
-      ),
-    );
+      ));
+      listMenu.add(
+        _ItemMenu(
+          const Icon(FontAwesomeIcons.windowRestore),
+          'Receipt',
+          onTap: () {},
+        ),
+      );
+    } else {
+      listMenu.add(
+        _ItemMenu(
+          const Icon(FontAwesomeIcons.windowRestore),
+          'Receipt',
+          onTap: () {},
+        ),
+      );
+    }
   }
 
   Future getImage() async {
@@ -111,36 +153,89 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildMenu(),
               InkWell(
                 onTap: () {
-                  dialogModalBottomsheet(context, 'Logout',
-                      () => pushReplacement(context, const Login()));
+                  dialogModalBottomsheet(context, 'Logout', () async {
+                    if (_auth.currentUser != null) {
+                      await _auth.signOut();
+                      pushReplacement(context, const Login());
+                    } else {
+                      pushAndRemoveUntil(child: const Login());
+                    }
+                  });
                 },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 238, 238, 238),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            FontAwesomeIcons.rightFromBracket,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 24),
-                          Text(
-                            'Logout',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.red),
-                          ),
-                        ],
-                      ),
-                    ],
+                child: Visibility(
+                  visible: ischeckLogin(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 16),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 238, 238, 238),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(
+                              FontAwesomeIcons.rightFromBracket,
+                              color: Colors.red,
+                            ),
+                            SizedBox(width: 24),
+                            Text(
+                              'Logout',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  dialogModalBottomsheet(context, 'Login', () async {
+                    if (_auth.currentUser != null) {
+                      await _auth.signOut();
+                      pushReplacement(context, const Login());
+                    } else {
+                      pushAndRemoveUntil(child: const Login());
+                    }
+                  });
+                },
+                child: Visibility(
+                  visible: !ischeckLogin(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 16),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 238, 238, 238),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(
+                              FontAwesomeIcons.rightFromBracket,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 24),
+                            Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -175,10 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 200,
                             width: 200,
                           )
-                        : Image.asset(
-                            "assets/images/khi.png",
-                            fit: BoxFit.cover,
-                          ),
+                        : getAvatar(),
                   ),
                 ),
                 const Positioned(
@@ -188,11 +280,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                'Andrew Ainsley',
-                style: TextStyle(
+                getNameUser(),
+                style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,

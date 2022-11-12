@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_app_fluter/screen_page/register_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'screen_page/login_screen.dart';
 import 'screen_page/home_screen.dart';

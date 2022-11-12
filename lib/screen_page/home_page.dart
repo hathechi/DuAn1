@@ -1,5 +1,8 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/modal/brand.dart';
@@ -17,19 +20,42 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
+  static final _fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   //Đường dẫn
-  final CollectionReference _brands =
-      FirebaseFirestore.instance.collection('brand');
+  static final CollectionReference _brands = _fireStore.collection('brand');
 
-  late Product product;
+  final List<Product> listProduct = [];
+  final _productHasUpdate = ValueNotifier<bool>(false);
   //Đường dẫn
-  final CollectionReference _products =
-      FirebaseFirestore.instance.collection('product');
+  final CollectionReference _products = _fireStore.collection('product');
 
   bool _isClickLike = false;
   //function delay
   Future<void> delay(int millis) async {
     await Future.delayed(Duration(milliseconds: millis));
+  }
+
+  String getNameUser() {
+    if (_auth.currentUser == null) {
+      return 'Guest';
+    }
+    return _auth.currentUser!.displayName!;
+  }
+
+  Widget getAvatar() {
+    if (_auth.currentUser == null) {
+      return Image.asset(
+        'assets/images/avatar.jpg',
+        fit: BoxFit.contain,
+      );
+    }
+    return Image.network(
+      _auth.currentUser!.photoURL!,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    );
   }
 
   @override
@@ -56,8 +82,10 @@ class _PageHomeState extends State<PageHome> {
                           child: CircleAvatar(
                             backgroundColor:
                                 const Color.fromARGB(255, 205, 205, 205),
-                            child: Image.asset(
-                              'assets/images/khi.png',
+                            child: ClipRRect(
+                              borderRadius: const BorderRadiusDirectional.all(
+                                  Radius.circular(100)),
+                              child: getAvatar(),
                             ),
                           ),
                         ),
@@ -66,14 +94,14 @@ class _PageHomeState extends State<PageHome> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 'Hello !',
                                 style: TextStyle(fontWeight: FontWeight.w200),
                               ),
                               Text(
-                                'Andrew  !',
-                                style: TextStyle(
+                                getNameUser(),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                             ],
@@ -82,10 +110,13 @@ class _PageHomeState extends State<PageHome> {
                         Expanded(
                           child: Container(
                               alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.notifications_none_outlined,
-                                color: Colors.black,
-                                size: 36,
+                              child: InkWell(
+                                onTap: () {},
+                                child: const Icon(
+                                  Icons.notifications_none_outlined,
+                                  color: Colors.black,
+                                  size: 36,
+                                ),
                               )),
                         )
                       ],
@@ -122,10 +153,14 @@ class _PageHomeState extends State<PageHome> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: _slider(),
-                ),
+                ValueListenableBuilder<bool>(
+                    valueListenable: _productHasUpdate,
+                    builder: (context, value, child) {
+                      if (!value) return const SizedBox();
+                      return Container(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: _slider(listProduct));
+                    }),
                 Container(
                   padding: const EdgeInsets.only(top: 10),
                   child: StreamBuilder(
@@ -187,6 +222,16 @@ class _PageHomeState extends State<PageHome> {
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
+                          for (var element in snapshot.data!.docs) {
+                            var mapData =
+                                element.data() as Map<String, dynamic>;
+                            var _productTemp = Product.fromJson(mapData);
+                            listProduct.add(_productTemp);
+                          }
+                          WidgetsBinding.instance
+                              .addPostFrameCallback((timeStamp) {
+                            _productHasUpdate.value = true;
+                          });
                           return GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -194,21 +239,22 @@ class _PageHomeState extends State<PageHome> {
                               mainAxisExtent: 250,
                             ),
                             scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data!.docs.length,
+                            itemCount: listProduct.length,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              var mapData = snapshot.data!.docs[index].data()
-                                  as Map<String, dynamic>;
-                              product = Product.fromJson(mapData);
                               return Hero(
                                 tag: index,
                                 child: Builder(builder: (context) {
                                   return Material(
                                     child: InkWell(
                                       onTap: () {
-                                        pushScreen(context,
-                                            ProductDetail(index: index));
+                                        pushScreen(
+                                            context,
+                                            ProductDetail(
+                                              product: listProduct[index],
+                                              index: index,
+                                            ));
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.all(5),
@@ -245,7 +291,8 @@ class _PageHomeState extends State<PageHome> {
                                                               .symmetric(
                                                           horizontal: 8),
                                                       child: Text(
-                                                        product.tensp!,
+                                                        listProduct[index]
+                                                            .tensp!,
                                                       ),
                                                     ),
                                                     Padding(
@@ -254,7 +301,8 @@ class _PageHomeState extends State<PageHome> {
                                                               8.0),
                                                       child: Text(
                                                         '\$' +
-                                                            product.giasp
+                                                            listProduct[index]
+                                                                .giasp
                                                                 .toString(),
                                                         style: const TextStyle(
                                                           fontWeight:
@@ -270,7 +318,7 @@ class _PageHomeState extends State<PageHome> {
                                             Positioned(
                                               top: 0,
                                               child: Image.network(
-                                                product.urlImage!,
+                                                listProduct[index].urlImage!,
                                                 width: 200,
                                                 height: 180,
                                               ),
@@ -319,22 +367,21 @@ class _PageHomeState extends State<PageHome> {
     );
   }
 
-  Widget _slider() {
+  Widget _slider(List<Product> listProduct) {
     return CarouselSlider.builder(
-      itemCount: 10,
+      itemCount: listProduct.length,
       itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
           Container(
         child: Stack(
           children: [
-            Card(
+            Container(
+              width: double.infinity,
               margin: const EdgeInsets.all(10),
-              color: const Color.fromARGB(255, 234, 234, 234),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromARGB(255, 234, 234, 234),
               ),
-              child: Image.asset('assets/images/logo.png'),
+              child: Image.network(listProduct[itemIndex].urlImage!),
             ),
             Positioned(
               top: 20,
@@ -346,7 +393,7 @@ class _PageHomeState extends State<PageHome> {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  '30$itemIndex.00 \$',
+                  '\$' + listProduct[itemIndex].giasp.toString(),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,

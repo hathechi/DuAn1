@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 
 class CartPage extends StatefulWidget {
   final bool fromToDetail;
@@ -13,7 +17,16 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   int count = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

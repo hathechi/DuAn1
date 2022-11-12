@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
+import 'package:my_app_fluter/screen_page/home_page_test.dart';
 import 'package:my_app_fluter/screen_page/likes_page.dart';
 import 'package:my_app_fluter/screen_page/profile_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -19,20 +20,36 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _curentIndex = 0;
-  @override
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _curentIndex,
-        // ignore: prefer_const_literals_to_create_immutables
+      body: PageView(
+        // controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _curentIndex = index;
+          });
+        },
         children: [
-          const PageHome(),
-          const CartPage(
-            fromToDetail: false,
+          IndexedStack(
+            index: _curentIndex,
+            // ignore: prefer_const_literals_to_create_immutablesl
+            children: const [
+              PageHome(),
+              CartPage(
+                fromToDetail: false,
+              ),
+              LikesPage(),
+              ProfilePage(),
+            ],
           ),
-          const LikesPage(),
-          const ProfilePage(),
+          // const PageHome(),
+          // const CartPage(
+          //   fromToDetail: false,
+          // ),
+          // const LikesPage(),
+          // const ProfilePage(),
         ],
       ),
       bottomNavigationBar: SalomonBottomBar(

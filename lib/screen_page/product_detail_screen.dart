@@ -1,19 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 
 class ProductDetail extends StatefulWidget {
+  late Product product;
   final int index;
-  const ProductDetail({super.key, required this.index});
+
+  ProductDetail({super.key, required this.index, required this.product});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   bool _isClickLike = false;
   int count = 1;
   int currentSize = 0;
@@ -34,11 +42,17 @@ class _ProductDetailState extends State<ProductDetail> {
         actions: [
           IconButton(
             onPressed: () {
-              pushScreen(
+              if (_auth.currentUser == null) {
+                showToast('Bạn Phải Đăng Nhập Trước', Colors.red);
+                pushAndRemoveUntil(child: const Login());
+              } else {
+                pushScreen(
                   context,
                   const CartPage(
                     fromToDetail: true,
-                  ));
+                  ),
+                );
+              }
             },
             icon: const Icon(
               FontAwesomeIcons.cartArrowDown,
@@ -51,7 +65,7 @@ class _ProductDetailState extends State<ProductDetail> {
         iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         title: Text(
-          'Running Shoes ${widget.index}',
+          widget.product.tensp!,
           style:
               const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -68,7 +82,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       children: [
                         Container(
                           height: 400,
-                          child: Image.asset('assets/images/giay2.png'),
+                          child: Image.network(widget.product.urlImage!),
                         ),
                         Container(
                           decoration: const BoxDecoration(
@@ -88,9 +102,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Air Jodan 3 Retro",
-                                      style: TextStyle(
+                                    Text(
+                                      widget.product.tensp!,
+                                      style: const TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -113,8 +127,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   ],
                                 ),
                               ),
-                              const ListTile(
-                                title: Padding(
+                              ListTile(
+                                title: const Padding(
                                   padding: EdgeInsets.only(bottom: 8.0),
                                   child: Text(
                                     'Description',
@@ -123,9 +137,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                subtitle: Text(
-                                  'Browse to find the images that fit your needs and click to download.\nUse the on-the-fly color image generation to match your brand identity. ',
-                                ),
+                                subtitle: Text(widget.product.chitietsp!),
                               ),
                               Row(
                                 children: [
@@ -240,7 +252,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             child: Text('Total Price'),
                           ),
                           subtitle: Text(
-                            '\$10$count.0',
+                            '\$${widget.product.giasp! * count}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 26,

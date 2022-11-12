@@ -1,10 +1,14 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_app_fluter/screen_page/forgotpassword_screen.dart';
 import 'package:my_app_fluter/screen_page/register_screen.dart';
-import 'home_screen.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
+
+import '../utils/showToast.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,8 +21,27 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _isShow = false;
   bool checkbox = false;
-  final _controllerUser = TextEditingController();
+  final _controllerEmail = TextEditingController();
   final _controllerPass = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) {
+          log('User is currently signed out!');
+        } else {
+          log('User is signed in!');
+          showLoading(2);
+          pushAndRemoveUntil();
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,14 +77,17 @@ class _LoginState extends State<Login> {
                     Container(
                         padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
                         child: TextFormField(
-                          controller: _controllerUser,
+                          controller: _controllerEmail,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Không Bỏ Trống Tài Khoản";
+                              return "Không Bỏ Trống Email";
                             }
-                            if (!RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                              return "Tên Không Chứa Ký Tự Đặc Biệt Hoặc Số";
+                            if (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value)) {
+                              return "Nhập Đúng Định Dạng Email";
                             }
                             return null;
                           },
@@ -80,7 +106,7 @@ class _LoginState extends State<Login> {
                                   style: BorderStyle.none,
                                 ),
                               ),
-                              labelText: 'USERNAME',
+                              labelText: 'EMAIL',
                               labelStyle: TextStyle(fontSize: 12)),
                         )),
                     Container(
@@ -91,7 +117,7 @@ class _LoginState extends State<Login> {
                           return "Không Bỏ Trống Mật Khẩu";
                         }
                         if (value.length < 6) {
-                          return "Mật Khẩu Phải Hơn 6 Ký Tự";
+                          return "Mật Khẩu Phải Hơn 5 Ký Tự";
                         }
                         return null;
                       },
@@ -126,26 +152,26 @@ class _LoginState extends State<Login> {
                           labelText: 'PASSWORD',
                           labelStyle: const TextStyle(fontSize: 12)),
                     )),
-                    Container(
-                      padding: const EdgeInsets.only(top: 10),
-                      alignment: Alignment.centerLeft,
-                      child: CheckboxListTile(
-                        onChanged: (value) {
-                          setState(() {
-                            checkbox = value!;
-                            print(checkbox);
-                          });
-                        },
-                        value: checkbox,
-                        title: Text(
-                          'Remember me',
-                          style: GoogleFonts.comfortaa(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        activeColor: Colors.black,
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.only(top: 10),
+                    //   alignment: Alignment.centerLeft,
+                    //   child: CheckboxListTile(
+                    //     onChanged: (value) {
+                    //       setState(() {
+                    //         checkbox = value!;
+                    //         print(checkbox);
+                    //       });
+                    //     },
+                    //     value: checkbox,
+                    //     title: Text(
+                    //       'Remember me',
+                    //       style: GoogleFonts.comfortaa(
+                    //           fontSize: 16, fontWeight: FontWeight.bold),
+                    //     ),
+                    //     activeColor: Colors.black,
+                    //     controlAffinity: ListTileControlAffinity.leading,
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
                       child: SizedBox(
@@ -316,21 +342,12 @@ class _LoginState extends State<Login> {
     });
   }
 
-  void onClickSignIn() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
-  }
-
-  void showToast() {
-    Fluttertoast.showToast(
-        msg: "This is Center Short Toast",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+  void onClickSignIn() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPass.text);
+    } on FirebaseAuthException catch (e) {
+      showToast(e.code, Colors.red);
+    }
   }
 }
