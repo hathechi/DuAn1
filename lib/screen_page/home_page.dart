@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: sized_box_for_whitespace
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -5,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:my_app_fluter/modal/brand.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
@@ -13,13 +15,18 @@ import 'package:my_app_fluter/screen_page/test.dart';
 import '../utils/push_screen.dart';
 
 class PageHome extends StatefulWidget {
-  const PageHome({super.key});
+  final PageController pageController;
+  const PageHome({
+    Key? key,
+    required this.pageController,
+  }) : super(key: key);
 
   @override
   State<PageHome> createState() => _PageHomeState();
 }
 
-class _PageHomeState extends State<PageHome> {
+class _PageHomeState extends State<PageHome>
+    with AutomaticKeepAliveClientMixin {
   static final _fireStore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   //Đường dẫn
@@ -37,29 +44,35 @@ class _PageHomeState extends State<PageHome> {
   }
 
   String getNameUser() {
-    if (_auth.currentUser == null) {
+    if (_auth.currentUser?.displayName == null) {
       return 'Guest';
     }
     return _auth.currentUser!.displayName!;
   }
 
   Widget getAvatar() {
-    if (_auth.currentUser == null) {
+    if (_auth.currentUser?.photoURL == null) {
       return Image.asset(
         'assets/images/avatar.jpg',
         fit: BoxFit.contain,
       );
     }
-    return Image.network(
-      _auth.currentUser!.photoURL!,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
+    return InkWell(
+      onTap: () {
+        widget.pageController.jumpToPage(3);
+      },
+      child: Image.network(
+        _auth.currentUser!.photoURL!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -91,20 +104,24 @@ class _PageHomeState extends State<PageHome> {
                         ),
                         Container(
                           padding: const EdgeInsets.only(left: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Hello !',
-                                style: TextStyle(fontWeight: FontWeight.w200),
-                              ),
-                              Text(
-                                getNameUser(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
-                              ),
-                            ],
+                          child: InkWell(
+                            onTap: () => widget.pageController.jumpToPage(3),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Hello !',
+                                  style: TextStyle(fontWeight: FontWeight.w200),
+                                ),
+                                Text(
+                                  getNameUser(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Expanded(
@@ -414,4 +431,7 @@ class _PageHomeState extends State<PageHome> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

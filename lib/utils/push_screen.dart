@@ -7,8 +7,12 @@ import 'package:my_app_fluter/screen_page/login_screen.dart';
 var navKey = GlobalKey<NavigatorState>();
 var navKey1 = GlobalKey<FormState>();
 BuildContext get getContext => navKey.currentContext!;
-Future<void> pushScreen(BuildContext context, Widget child) async {
+void hideKeyboard() {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
+}
+
+Future<void> pushScreen(BuildContext context, Widget child) async {
+  hideKeyboard();
   await Navigator.push(
     context,
     PageRouteBuilder(
@@ -32,7 +36,7 @@ Future<void> pushScreen(BuildContext context, Widget child) async {
 }
 
 Future<void> pushReplacement(BuildContext context, Widget child) async {
-  SystemChannels.textInput.invokeMethod('TextInput.hide');
+  hideKeyboard();
   await Navigator.pushReplacement(
     context,
     PageRouteBuilder(
@@ -61,7 +65,7 @@ void pop() {
 }
 
 void pushAndRemoveUntil({Widget? child}) {
-  SystemChannels.textInput.invokeMethod('TextInput.hide');
+  hideKeyboard();
   navKey.currentState!.pushAndRemoveUntil(
       MaterialPageRoute(
           builder: (BuildContext context) => child ?? const HomeScreen()),

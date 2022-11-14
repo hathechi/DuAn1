@@ -1,12 +1,14 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:my_app_fluter/screen_page/login_screen.dart';
-import 'package:my_app_fluter/utils/push_screen.dart';
-import 'package:my_app_fluter/utils/showToast.dart';
+import 'package:my_app_fluter/DAO/cartDAO.dart';
+import 'package:my_app_fluter/modal/cart.dart';
 
 class CartPage extends StatefulWidget {
   final bool fromToDetail;
@@ -16,19 +18,18 @@ class CartPage extends StatefulWidget {
   State<CartPage> createState() => _CartPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _CartPageState extends State<CartPage>
+    with AutomaticKeepAliveClientMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  int count = 1;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  //Đường dẫn
+  final CollectionReference _cart =
+      FirebaseFirestore.instance.collection('cart');
+  List<Cart> listCart = [];
+  double tong = 0;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -57,12 +58,35 @@ class _CartPageState extends State<CartPage> {
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 7,
-                  itemBuilder: (context, index) {
-                    return _itemCart();
+                child: StreamBuilder(
+                  stream: _cart
+                      .doc(_auth.currentUser!.uid)
+                      .collection('cart')
+                      .snapshots(),
+                  builder:
+                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                    if (streamSnapshot.hasData) {
+                      listCart.clear();
+
+                      for (var element in streamSnapshot.data!.docs) {
+                        var _item = Cart.fromMap(
+                          (element.data() as Map<String, dynamic>),
+                        );
+                        listCart.add(_item);
+                      }
+
+                      return listCart.isEmpty
+                          ? Image.asset('assets/images/nothing.png')
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: listCart.length,
+                              itemBuilder: (context, index) {
+                                return _itemCart(index);
+                              },
+                            );
+                    }
+                    return const Card();
                   },
                 ),
               ),
@@ -85,16 +109,17 @@ class _CartPageState extends State<CartPage> {
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     flex: 2,
                     child: ListTile(
-                      title: Padding(
+                      title: const Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: Text('Total Price'),
                       ),
                       subtitle: Text(
-                        '\$105.0',
-                        style: TextStyle(
+                        tong.toString(),
+                        // tong.toString(),
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 26,
                             fontWeight: FontWeight.bold),
@@ -135,14 +160,14 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _quantily() {
+  Widget _quantily(int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           flex: 2,
           child: Text(
-            '\$24$count.0',
+            '\$${listCart[index].giasp! * listCart[index].slsp}',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -167,8 +192,16 @@ class _CartPageState extends State<CartPage> {
                   onPressed: () {
                     setState(
                       () {
-                        if (count != 1) {
-                          count--;
+                        if (listCart[index].slsp != 1) {
+                          listCart[index].slsp = (listCart[index].slsp - 1);
+                          listCart[index].tongtien =
+                              listCart[index].giasp! * listCart[index].slsp;
+                          updateCart(listCart[index]);
+                          tong = 0;
+                          for (int i = 0; i < listCart.length; i++) {
+                            tong += listCart[i].tongtien!;
+                            log("Cong " + tong.toString());
+                          }
                         }
                       },
                     );
@@ -176,15 +209,25 @@ class _CartPageState extends State<CartPage> {
                   icon: const Icon(FontAwesomeIcons.minus),
                 ),
                 Text(
-                  '$count',
+                  '${listCart[index].slsp}',
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   onPressed: () {
-                    setState(() {
-                      count++;
-                    });
+                    setState(
+                      () {
+                        listCart[index].slsp += 1;
+                        listCart[index].tongtien =
+                            listCart[index].giasp! * listCart[index].slsp;
+                        updateCart(listCart[index]);
+                        tong = 0;
+                        for (int i = 0; i < listCart.length; i++) {
+                          tong += listCart[i].tongtien!;
+                          log("Cong " + tong.toString());
+                        }
+                      },
+                    );
                   },
                   icon: const Icon(FontAwesomeIcons.plus),
                 ),
@@ -196,19 +239,23 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _itemCart() {
+  Widget _itemCart(index) {
     return Slidable(
       key: UniqueKey(),
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
-        dismissible: DismissiblePane(onDismissed: () {}),
+        dismissible: DismissiblePane(onDismissed: () {
+          deleteCart(listCart[index]);
+        }),
         children: [
           SlidableAction(
             borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
             spacing: 10,
-            onPressed: (context) {},
+            onPressed: (context) {
+              deleteCart(listCart[index]);
+            },
             backgroundColor: const Color.fromARGB(255, 245, 55, 55),
             // foregroundColor: Colors.white,
             icon: FontAwesomeIcons.trashCan,
@@ -224,7 +271,7 @@ class _CartPageState extends State<CartPage> {
           borderRadius: BorderRadius.all(
             Radius.circular(20),
           ),
-          color: Color.fromARGB(255, 182, 198, 217),
+          color: Color.fromARGB(255, 226, 235, 247),
         ),
         child: Row(
           children: [
@@ -236,9 +283,13 @@ class _CartPageState extends State<CartPage> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(20),
                   ),
-                  color: Color.fromARGB(255, 251, 227, 220),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
-                child: Image.asset('assets/images/giay1.png'),
+                child: Image.network(
+                  listCart[index].urlImage!,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
               ),
             ),
             Expanded(
@@ -250,10 +301,16 @@ class _CartPageState extends State<CartPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Air Jodan 3 Retro',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
+                        Expanded(
+                          child: Wrap(
+                            children: [
+                              Text(
+                                listCart[index].tensp!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                            ],
+                          ),
                         ),
                         IconButton(
                           onPressed: () {},
@@ -266,14 +323,14 @@ class _CartPageState extends State<CartPage> {
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: const Text(
-                        'Black  |  Size = 42',
-                        style: TextStyle(fontSize: 12),
+                      child: Text(
+                        '${listCart[index].mausp!}  |  Size = ${listCart[index].kichcosp!}',
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: _quantily(),
+                      child: _quantily(index),
                     ),
                   ],
                 ),
@@ -284,4 +341,14 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
+
+// void totalPrice(List<Cart> listCart) {
+//   for (int i = 0; i < listCart.length; i++) {
+//     tong += listCart[i].tongtien!;
+//     log("Cong " + tong.toString());
+//   }
+// }

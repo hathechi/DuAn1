@@ -7,7 +7,6 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_app_fluter/screen_page/add_brand.dart';
 import 'package:my_app_fluter/screen_page/add_product.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
@@ -21,7 +20,8 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with AutomaticKeepAliveClientMixin {
   //Lấy hình từ thư viện máy
   File? image;
   List<_ItemMenu> listMenu = [];
@@ -35,14 +35,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String getNameUser() {
-    if (_auth.currentUser == null) {
+    if (_auth.currentUser?.displayName == null) {
       return 'Guest';
     }
     return _auth.currentUser!.displayName!;
   }
 
   Widget getAvatar() {
-    if (_auth.currentUser == null) {
+    if (_auth.currentUser?.photoURL == null) {
       return Image.asset(
         'assets/images/avatar.jpg',
         fit: BoxFit.cover,
@@ -104,7 +104,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future getImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, imageQuality: 30);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() {
@@ -117,6 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -156,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   dialogModalBottomsheet(context, 'Logout', () async {
                     if (_auth.currentUser != null) {
                       await _auth.signOut();
-                      pushReplacement(context, const Login());
+                      pushAndRemoveUntil(child: const Login());
                     } else {
                       pushAndRemoveUntil(child: const Login());
                     }
@@ -346,6 +348,9 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _ItemMenu {

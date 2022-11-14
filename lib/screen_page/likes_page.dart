@@ -11,10 +11,12 @@ class LikesPage extends StatefulWidget {
   State<LikesPage> createState() => _LikesPageState();
 }
 
-class _LikesPageState extends State<LikesPage> {
+class _LikesPageState extends State<LikesPage>
+    with AutomaticKeepAliveClientMixin {
   int count = 1;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -142,4 +144,7 @@ class _LikesPageState extends State<LikesPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

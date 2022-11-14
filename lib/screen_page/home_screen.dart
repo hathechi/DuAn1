@@ -19,68 +19,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _curentIndex = 0;
-
+  final _pageController = PageController();
+  final _currentPage = ValueNotifier<int>(0);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        // controller: _pageController,
+        physics: const BouncingScrollPhysics(),
+        controller: _pageController,
         onPageChanged: (index) {
-          setState(() {
-            _curentIndex = index;
-          });
+          _currentPage.value = index;
         },
         children: [
-          IndexedStack(
-            index: _curentIndex,
-            // ignore: prefer_const_literals_to_create_immutablesl
-            children: const [
-              PageHome(),
-              CartPage(
-                fromToDetail: false,
-              ),
-              LikesPage(),
-              ProfilePage(),
-            ],
-          ),
-          // const PageHome(),
-          // const CartPage(
-          //   fromToDetail: false,
-          // ),
-          // const LikesPage(),
-          // const ProfilePage(),
+          PageHome(pageController: _pageController),
+          const CartPage(fromToDetail: false),
+          const LikesPage(),
+          const ProfilePage(),
         ],
       ),
-      bottomNavigationBar: SalomonBottomBar(
-          currentIndex: _curentIndex,
-          onTap: (index) {
-            setState(() {
-              _curentIndex = index;
-            });
-          },
-          items: [
-            SalomonBottomBarItem(
-                icon: const Icon(FontAwesomeIcons.house),
-                title: const Text('Home'),
-                selectedColor: Colors.pinkAccent,
-                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
-            SalomonBottomBarItem(
-                icon: const Icon(FontAwesomeIcons.cartShopping),
-                title: const Text('Cart'),
-                selectedColor: Colors.pinkAccent,
-                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
-            SalomonBottomBarItem(
-                icon: const Icon(FontAwesomeIcons.solidHeart),
-                title: const Text('Likes'),
-                selectedColor: Colors.pinkAccent,
-                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
-            SalomonBottomBarItem(
-                icon: const Icon(FontAwesomeIcons.solidUser),
-                title: const Text('Profile'),
-                selectedColor: Colors.pinkAccent,
-                unselectedColor: const Color.fromARGB(255, 243, 135, 171)),
-          ]),
+      bottomNavigationBar: ValueListenableBuilder<int>(
+          valueListenable: _currentPage,
+          builder: (context, value, child) {
+            return SalomonBottomBar(
+                currentIndex: value,
+                onTap: (index) {
+                  _pageController.jumpToPage(index);
+                },
+                items: [
+                  SalomonBottomBarItem(
+                      icon: const Icon(FontAwesomeIcons.house),
+                      title: const Text('Home'),
+                      selectedColor: Colors.pinkAccent,
+                      unselectedColor:
+                          const Color.fromARGB(255, 243, 135, 171)),
+                  SalomonBottomBarItem(
+                      icon: const Icon(FontAwesomeIcons.cartShopping),
+                      title: const Text('Cart'),
+                      selectedColor: Colors.pinkAccent,
+                      unselectedColor:
+                          const Color.fromARGB(255, 243, 135, 171)),
+                  SalomonBottomBarItem(
+                      icon: const Icon(FontAwesomeIcons.solidHeart),
+                      title: const Text('Likes'),
+                      selectedColor: Colors.pinkAccent,
+                      unselectedColor:
+                          const Color.fromARGB(255, 243, 135, 171)),
+                  SalomonBottomBarItem(
+                      icon: const Icon(FontAwesomeIcons.solidUser),
+                      title: const Text('Profile'),
+                      selectedColor: Colors.pinkAccent,
+                      unselectedColor:
+                          const Color.fromARGB(255, 243, 135, 171)),
+                ]);
+          }),
     );
   }
 

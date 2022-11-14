@@ -33,13 +33,13 @@ class _RegisterState extends State<Register> {
   final _controllerDate = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String? urlImage;
   //Lấy hình từ thư viện máy
   File? image;
 
   Future getImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, imageQuality: 30);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() {
@@ -217,6 +217,7 @@ class _RegisterState extends State<Register> {
                                         'Bạn Phải Chấp Nhận Các Điều Khoản Dịch Vụ !',
                                         Colors.red);
                                   } else {
+                                    hideKeyboard();
                                     onClickSignIn();
                                   }
                                 }
@@ -435,6 +436,7 @@ class _RegisterState extends State<Register> {
     String timeNow = DateFormat('kk:mm:ss').format(DateTime.now());
     final ref =
         FirebaseStorage.instance.ref().child("images").child(timeNow + '.jpg');
+    String urlImage;
     await ref.putFile(image!);
     urlImage = await ref.getDownloadURL();
 

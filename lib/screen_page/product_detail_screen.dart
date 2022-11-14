@@ -1,8 +1,12 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
@@ -21,17 +25,25 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //Đường dẫn
+  final CollectionReference _brands =
+      FirebaseFirestore.instance.collection('brand');
 
   bool _isClickLike = false;
   int count = 1;
   int currentSize = 0;
+  List<String> listSize = ['38', '39', '40', '41', '42', '43'];
+  List<String> listColors = ['Đen', 'Xám', 'Hồng', 'Xanh Dương', 'Cam'];
+  String? chooceSize;
+  String? chooceColor;
+  double? tongtien;
   int currentColor = 0;
   List<ChoiceColor> listColor = [
     ChoiceColor(Colors.black),
     ChoiceColor(Colors.grey),
     ChoiceColor(Colors.pink),
     ChoiceColor(Colors.blue.shade900),
-    ChoiceColor(Colors.amber),
+    ChoiceColor(Colors.orange),
   ];
 
   @override
@@ -65,7 +77,7 @@ class _ProductDetailState extends State<ProductDetail> {
         iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         title: Text(
-          widget.product.tensp!,
+          widget.product.thuonghieusp!,
           style:
               const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -78,6 +90,7 @@ class _ProductDetailState extends State<ProductDetail> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
                         Container(
@@ -102,11 +115,18 @@ class _ProductDetailState extends State<ProductDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      widget.product.tensp!,
-                                      style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Wrap(
+                                        children: [
+                                          Text(
+                                            widget.product.tensp!,
+                                            style: const TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     IconButton(
                                       onPressed: () {
@@ -271,7 +291,20 @@ class _ProductDetailState extends State<ProductDetail> {
                                 elevation: 8,
                                 shape: (RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(130)))),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (_auth.currentUser == null) {
+                                showToast(
+                                    'Bạn Phải Đăng Nhập Trước', Colors.red);
+                                pushAndRemoveUntil(child: const Login());
+                              } else {
+                                addCart(
+                                    widget.product,
+                                    chooceSize ?? listSize[0],
+                                    chooceColor ?? listColors[0],
+                                    widget.product.giasp! * count,
+                                    count);
+                              }
+                            },
                             label: const Text(
                               '    ADD TO CART',
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -294,39 +327,46 @@ class _ProductDetailState extends State<ProductDetail> {
     return Container(
       height: 50,
       width: double.infinity,
-      child: ListView.builder(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                currentSize = index;
-              });
-            },
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                // color: Color.fromARGB(255, 219, 218, 218),
-                color: index == currentSize ? Colors.black : Colors.white,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(100),
+        physics: const BouncingScrollPhysics(),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: listSize.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  currentSize = index;
+                  chooceSize = listSize[index];
+                });
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  // color: Color.fromARGB(255, 219, 218, 218),
+                  color: index == currentSize ? Colors.black : Colors.white,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(100),
+                  ),
+                ),
+                child: Text(
+                  listSize[index],
+                  style: index == currentSize
+                      ? const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white)
+                      : const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                 ),
               ),
-              child: Text(
-                '4$index',
-                style: index == currentSize
-                    ? const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white)
-                    : const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -349,36 +389,43 @@ class _ProductDetailState extends State<ProductDetail> {
           Container(
             padding: const EdgeInsets.only(left: 15),
             height: 50,
-            child: ListView.builder(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              itemCount: listColor.length,
-              itemBuilder: (context, index) {
-                var color = listColor[index];
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      currentColor = index;
-                    });
-                  },
-                  child: Container(
-                    width: 40,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: color.mColor,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(100),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: listColor.length,
+                itemBuilder: (context, index) {
+                  var color = listColor[index];
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentColor = index;
+                        chooceColor = listColors[index];
+                      });
+                    },
+                    child: Container(
+                      width: 40,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: color.mColor,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(100),
+                        ),
                       ),
+                      child: currentColor == index
+                          ? const Icon(
+                              FontAwesomeIcons.check,
+                              color: Colors.white,
+                            )
+                          : null,
                     ),
-                    child: currentColor == index
-                        ? const Icon(
-                            FontAwesomeIcons.check,
-                            color: Colors.white,
-                          )
-                        : null,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ],

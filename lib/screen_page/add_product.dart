@@ -179,15 +179,18 @@ class _AddProductState extends State<AddProduct> {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: Wrap(
-                              children: [
-                                Text(
-                                  'Price: ${product.giasp}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Expanded(
+                              flex: 2,
+                              child: Wrap(
+                                children: [
+                                  Text(
+                                    'Price: ${product.giasp}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -224,7 +227,7 @@ class _AddProductState extends State<AddProduct> {
                         child: Wrap(
                           children: [
                             Text(
-                              'Detail: ${product.chitietsp}',
+                              'Detail: ${product.chitietsp?.substring(0, 50)} ...',
                               style: const TextStyle(fontSize: 12),
                             ),
                           ],
