@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:my_app_fluter/screen_page/add_brand.dart';
 import 'package:my_app_fluter/screen_page/add_product.dart';
+import 'package:my_app_fluter/screen_page/edit_profile_screen.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
@@ -22,8 +19,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  //Lấy hình từ thư viện máy
-  File? image;
   List<_ItemMenu> listMenu = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -80,6 +75,16 @@ class _ProfilePageState extends State<ProfilePage>
         },
       ));
       listMenu.add(_ItemMenu(
+        const Icon(FontAwesomeIcons.userPen),
+        'Edit Profile',
+        onTap: () {
+          pushScreen(
+            context,
+            const EditProfile(),
+          );
+        },
+      ));
+      listMenu.add(_ItemMenu(
         const Icon(FontAwesomeIcons.chartLine),
         'Sales Statistics',
         onTap: () {},
@@ -92,6 +97,16 @@ class _ProfilePageState extends State<ProfilePage>
         ),
       );
     } else {
+      listMenu.add(_ItemMenu(
+        const Icon(FontAwesomeIcons.userPen),
+        'Edit Profile',
+        onTap: () {
+          pushScreen(
+            context,
+            const EditProfile(),
+          );
+        },
+      ));
       listMenu.add(
         _ItemMenu(
           const Icon(FontAwesomeIcons.windowRestore),
@@ -99,20 +114,6 @@ class _ProfilePageState extends State<ProfilePage>
           onTap: () {},
         ),
       );
-    }
-  }
-
-  Future getImage() async {
-    try {
-      final image = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 30);
-      if (image == null) return;
-      final imageTemp = File(image.path);
-      setState(() {
-        this.image = imageTemp;
-      });
-    } on PlatformException catch (e) {
-      print('false');
     }
   }
 
@@ -251,50 +252,28 @@ class _ProfilePageState extends State<ProfilePage>
   Widget _avatar() {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: InkWell(
-        onTap: () {
-          getImage();
-        },
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: (70),
-                  backgroundColor: const Color.fromARGB(255, 222, 222, 222),
-                  child: ClipRRect(
-                    borderRadius:
-                        const BorderRadiusDirectional.all(Radius.circular(100)),
-                    child: image != null
-                        ? Image.file(
-                            image!,
-                            fit: BoxFit.cover,
-                            height: 200,
-                            width: 200,
-                          )
-                        : getAvatar(),
-                  ),
-                ),
-                const Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: Icon(FontAwesomeIcons.camera),
-                ),
-              ],
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: (70),
+            backgroundColor: const Color.fromARGB(255, 222, 222, 222),
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadiusDirectional.all(Radius.circular(100)),
+              child: getAvatar(),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                getNameUser(),
-                style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                    decorationStyle: TextDecorationStyle.wavy),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              getNameUser(),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

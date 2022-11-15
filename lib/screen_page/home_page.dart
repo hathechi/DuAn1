@@ -388,37 +388,43 @@ class _PageHomeState extends State<PageHome>
     return CarouselSlider.builder(
       itemCount: listProduct.length,
       itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-          Container(
-        child: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: const Color.fromARGB(255, 234, 234, 234),
+          InkWell(
+        onTap: () => pushScreen(
+          context,
+          ProductDetail(index: itemIndex, product: listProduct[itemIndex]),
+        ),
+        child: Container(
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color.fromARGB(255, 234, 234, 234),
+                ),
+                child: Image.network(listProduct[itemIndex].urlImage!),
               ),
-              child: Image.network(listProduct[itemIndex].urlImage!),
-            ),
-            Positioned(
-              top: 20,
-              right: 20,
-              child: Container(
-                height: 60,
-                decoration: const BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  '\$' + listProduct[itemIndex].giasp.toString(),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+              Positioned(
+                top: 20,
+                right: 20,
+                child: Container(
+                  height: 60,
+                  decoration: const BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    '\$' + listProduct[itemIndex].giasp.toString(),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       options: CarouselOptions(

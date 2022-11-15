@@ -88,6 +88,7 @@ void deleteCart(Cart cart) async {
       .delete()
       .then((value) {
     showToast('Xóa Thành Công', Colors.green);
+    pop();
   }).catchError((error) {
     print("Failed to add user: $error");
   });

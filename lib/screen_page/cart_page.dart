@@ -9,6 +9,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/modal/cart.dart';
+import 'package:my_app_fluter/screen_page/googlemap_picker.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
 class CartPage extends StatefulWidget {
   final bool fromToDetail;
@@ -117,7 +120,7 @@ class _CartPageState extends State<CartPage>
                         child: Text('Total Price'),
                       ),
                       subtitle: Text(
-                        tong.toString(),
+                        '\$' + tong.toString(),
                         // tong.toString(),
                         style: const TextStyle(
                             color: Colors.black,
@@ -139,7 +142,9 @@ class _CartPageState extends State<CartPage>
                               elevation: 8,
                               shape: (RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(130)))),
-                          onPressed: () {},
+                          onPressed: () {
+                            pushScreen(context, const GoogleMapPicker());
+                          },
                           label: const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text(
@@ -166,13 +171,24 @@ class _CartPageState extends State<CartPage>
       children: [
         Expanded(
           flex: 2,
-          child: Text(
-            '\$${listCart[index].giasp! * listCart[index].slsp}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: const Color.fromARGB(255, 255, 255, 255),
+            ),
+            child: Text(
+              '\$${(listCart[index].giasp! * listCart[index].slsp).toStringAsFixed(1)}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+        ),
+        const SizedBox(
+          width: 10,
         ),
         Expanded(
           flex: 3,
@@ -245,7 +261,8 @@ class _CartPageState extends State<CartPage>
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
         dismissible: DismissiblePane(onDismissed: () {
-          deleteCart(listCart[index]);
+          dialogModalBottomsheet(
+              context, 'Delete', () => deleteCart(listCart[index]));
         }),
         children: [
           SlidableAction(
@@ -254,7 +271,8 @@ class _CartPageState extends State<CartPage>
             ),
             spacing: 10,
             onPressed: (context) {
-              deleteCart(listCart[index]);
+              dialogModalBottomsheet(
+                  context, 'Delete', () => deleteCart(listCart[index]));
             },
             backgroundColor: const Color.fromARGB(255, 245, 55, 55),
             // foregroundColor: Colors.white,
