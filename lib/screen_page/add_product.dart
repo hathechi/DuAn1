@@ -60,8 +60,8 @@ class _AddProductState extends State<AddProduct> {
                     itemBuilder: (context, index) {
                       var mapData = streamSnapshot.data!.docs[index].data()
                           as Map<String, dynamic>;
-                      var idColection = streamSnapshot.data!.docs[index].id;
-                      log("ID: " + idColection);
+                      // var idColection = streamSnapshot.data!.docs[index].id;
+                      // log("ID: " + idColection);
                       product = Product.fromJson(mapData);
                       return _itemProduct(product);
                     },
@@ -179,18 +179,19 @@ class _AddProductState extends State<AddProduct> {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Expanded(
-                              flex: 2,
-                              child: Wrap(
-                                children: [
-                                  Text(
-                                    'Price: ${product.giasp}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 254, 251),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Wrap(
+                              children: [
+                                Text(
+                                  'Price: ${product.giasp}',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ],
                             ),
                           ),
                         ],
