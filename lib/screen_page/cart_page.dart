@@ -143,7 +143,11 @@ class _CartPageState extends State<CartPage>
                               shape: (RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(130)))),
                           onPressed: () {
-                            pushScreen(context, const GoogleMapPicker());
+                            pushScreen(
+                                context,
+                                GoogleMapPicker(
+                                  listCart: listCart,
+                                ));
                           },
                           label: const Padding(
                             padding: EdgeInsets.all(8.0),

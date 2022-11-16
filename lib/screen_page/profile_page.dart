@@ -7,6 +7,7 @@ import 'package:my_app_fluter/screen_page/add_brand.dart';
 import 'package:my_app_fluter/screen_page/add_product.dart';
 import 'package:my_app_fluter/screen_page/edit_profile_screen.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
+import 'package:my_app_fluter/screen_page/receipt_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
@@ -93,7 +94,12 @@ class _ProfilePageState extends State<ProfilePage>
         _ItemMenu(
           const Icon(FontAwesomeIcons.windowRestore),
           'Receipt',
-          onTap: () {},
+          onTap: () {
+            pushScreen(
+              context,
+              const ReceiptScreen(),
+            );
+          },
         ),
       );
     } else {
@@ -111,7 +117,12 @@ class _ProfilePageState extends State<ProfilePage>
         _ItemMenu(
           const Icon(FontAwesomeIcons.windowRestore),
           'Receipt',
-          onTap: () {},
+          onTap: () {
+            pushScreen(
+              context,
+              const ReceiptScreen(),
+            );
+          },
         ),
       );
     }

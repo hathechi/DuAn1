@@ -57,6 +57,8 @@ dependencies:
   google_maps_flutter: ^2.2.1
   geocoding: ^2.0.5
   geolocator: ^8.2.1
+  #code pin
+  pin_code_fields: ^7.4.0
   
 
 dev_dependencies:
