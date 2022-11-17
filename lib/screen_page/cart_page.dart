@@ -28,6 +28,7 @@ class _CartPageState extends State<CartPage>
   final CollectionReference _cart =
       FirebaseFirestore.instance.collection('cart');
   List<Cart> listCart = [];
+
   double tong = 0;
 
   @override

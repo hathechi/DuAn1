@@ -197,7 +197,7 @@ class _AddProductState extends State<AddProduct> {
                         ],
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
@@ -207,7 +207,7 @@ class _AddProductState extends State<AddProduct> {
                         ),
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
@@ -221,7 +221,7 @@ class _AddProductState extends State<AddProduct> {
                         ),
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       Container(
                         alignment: Alignment.centerLeft,

@@ -1,7 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/DAO/receiptDAO.dart';
+import 'package:my_app_fluter/modal/cart.dart';
+import 'package:my_app_fluter/notification/notification.dart';
 import 'package:my_app_fluter/screen_page/home_screen.dart';
 import 'package:my_app_fluter/screen_page/receipt_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
@@ -9,14 +13,32 @@ import 'package:my_app_fluter/utils/showToast.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class EnterPin extends StatefulWidget {
-  const EnterPin({super.key});
+  List<Cart> listCart = [];
+  double tongtien;
+  String address;
+  String phoneNumber;
+
+  EnterPin(
+      {super.key,
+      required this.listCart,
+      required this.tongtien,
+      required this.address,
+      required this.phoneNumber});
 
   @override
   State<EnterPin> createState() => _EnterPinState();
 }
 
 class _EnterPinState extends State<EnterPin> {
+  // late final FlutterLocalNotificationsPlugin service;
   final pinController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    PushNotification.intialize();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,11 +124,17 @@ class _EnterPinState extends State<EnterPin> {
                           elevation: 8,
                           shape: (RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(130)))),
-                      onPressed: () {
+                      onPressed: () async {
                         if (pinController.text.length < 4) {
                           showToast('PIN code isEmpty', Colors.red);
                           return;
                         }
+                        await addReceipt(
+                          widget.listCart,
+                          widget.tongtien,
+                          widget.phoneNumber,
+                          widget.address,
+                        );
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -150,13 +178,20 @@ class _EnterPinState extends State<EnterPin> {
                                         textDirection: TextDirection.rtl,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.black,
-                                              elevation: 8,
-                                              shape: (RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          130)))),
-                                          onPressed: () {
+                                            backgroundColor: Colors.black,
+                                            elevation: 8,
+                                            shape: (RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(130),
+                                            )),
+                                          ),
+                                          onPressed: () async {
+                                            await PushNotification.showNotification(
+                                                id: 1,
+                                                body:
+                                                    'Bạn Đã Thanh Toán Đơn Hàng Thành Công, Hãy Kiểm Tra Lại Hóa Đơn Nhé',
+                                                title:
+                                                    'Thanh Toán Thành Công !');
                                             pushScreen(
                                                 context, const ReceiptScreen());
                                           },

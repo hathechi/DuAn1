@@ -59,6 +59,8 @@ dependencies:
   geolocator: ^8.2.1
   #code pin
   pin_code_fields: ^7.4.0
+  #notification
+  flutter_local_notifications: ^9.6.0
   
 
 dev_dependencies:
