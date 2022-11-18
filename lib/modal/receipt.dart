@@ -11,6 +11,7 @@ class Receipt {
   double? tongtien;
   String? address;
   String? phoneNumber;
+  bool? status;
   List<Cart>? listCart;
   Receipt({
     this.mahoadon,
@@ -18,6 +19,7 @@ class Receipt {
     this.tongtien,
     this.address,
     this.phoneNumber,
+    this.status = false,
     this.listCart,
   });
 
@@ -27,6 +29,7 @@ class Receipt {
     double? tongtien,
     String? address,
     String? phoneNumber,
+    bool? status,
     List<Cart>? listCart,
   }) {
     return Receipt(
@@ -35,6 +38,7 @@ class Receipt {
       tongtien: tongtien ?? this.tongtien,
       address: address ?? this.address,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      status: status ?? this.status,
       listCart: listCart ?? this.listCart,
     );
   }
@@ -46,6 +50,7 @@ class Receipt {
       'tongtien': tongtien,
       'address': address,
       'phoneNumber': phoneNumber,
+      'status': status,
       'listCart': listCart!.map((x) => x.toMap()).toList(),
     };
   }
@@ -58,6 +63,7 @@ class Receipt {
       address: map['address'] != null ? map['address'] as String : null,
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
+      status: map['status'] != null ? map['status'] as bool : null,
       listCart: map['listCart'] != null
           ? List<Cart>.from(
               (map['listCart'] as List<dynamic>).map<Cart?>(
@@ -75,7 +81,7 @@ class Receipt {
 
   @override
   String toString() {
-    return 'Receipt(mahoadon: $mahoadon, ngaytaohd: $ngaytaohd, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, listCart: $listCart)';
+    return 'Receipt(mahoadon: $mahoadon, ngaytaohd: $ngaytaohd, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, status: $status, listCart: $listCart)';
   }
 
   @override
@@ -87,6 +93,7 @@ class Receipt {
         other.tongtien == tongtien &&
         other.address == address &&
         other.phoneNumber == phoneNumber &&
+        other.status == status &&
         listEquals(other.listCart, listCart);
   }
 
@@ -97,6 +104,7 @@ class Receipt {
         tongtien.hashCode ^
         address.hashCode ^
         phoneNumber.hashCode ^
+        status.hashCode ^
         listCart.hashCode;
   }
 }

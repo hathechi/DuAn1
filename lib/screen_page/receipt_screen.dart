@@ -67,7 +67,8 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             ReceiptDetail(receipt: listReceipt[index]));
                       },
                       child: Container(
-                        height: 100,
+                        height: 150,
+                        width: double.infinity,
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -75,65 +76,99 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const CircleAvatar(
-                              radius: 36,
-                              backgroundColor: Colors.black,
-                              child: Icon(
-                                FontAwesomeIcons.truckFast,
-                                color: Colors.white,
-                                size: 26,
+                            const Expanded(
+                              flex: 1,
+                              child: CircleAvatar(
+                                radius: 36,
+                                backgroundColor: Colors.black,
+                                child: Icon(
+                                  FontAwesomeIcons.truckFast,
+                                  color: Colors.white,
+                                  size: 26,
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Container(
-                              child: Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text('Code Bill:'),
-                                      Text('Date created:'),
-                                      Text('Total Price:'),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        listReceipt[index].mahoadon!,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: const [
+                                          Text('Code Bill:'),
+                                          Text('Date created:'),
+                                          Text('Total Price:'),
+                                          Text('Status:'),
+                                        ],
                                       ),
-                                      Text(
-                                        listReceipt[index].ngaytaohd!,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            listReceipt[index].mahoadon!,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            listReceipt[index].ngaytaohd!,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            '\$${listReceipt[index].tongtien!.toStringAsFixed(3)}',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          !listReceipt[index].status!
+                                              ? Wrap(
+                                                  children: const [
+                                                    Expanded(
+                                                      child: Text(
+                                                        'Chưa Hoàn Thành',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Wrap(
+                                                  children: const [
+                                                    Text(
+                                                      'Đã Hoàn Thành',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255, 9, 157, 167),
+                                                          fontSize: 16),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ],
                                       ),
-                                      Text(
-                                        '\$${listReceipt[index].tongtien!.toStringAsFixed(3)}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],

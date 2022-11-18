@@ -30,6 +30,15 @@ class _CartPageState extends State<CartPage>
   List<Cart> listCart = [];
 
   double tong = 0;
+  String uid = 'abc';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (_auth.currentUser != null) {
+      uid = _auth.currentUser!.uid;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +73,8 @@ class _CartPageState extends State<CartPage>
                 physics: const BouncingScrollPhysics(),
                 child: StreamBuilder(
                   stream: _cart
-                      .doc(_auth.currentUser!.uid)
+                      .doc(uid)
+                      // .doc(_auth.currentUser!.uid)
                       .collection('cart')
                       .snapshots(),
                   builder:
