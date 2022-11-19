@@ -135,6 +135,11 @@ class _EnterPinState extends State<EnterPin> {
                           widget.phoneNumber,
                           widget.address,
                         );
+                        await PushNotification.showNotification(
+                            id: 1,
+                            body:
+                                'Bạn Đã Thanh Toán \$${widget.tongtien.toStringAsFixed(2)} Thành Công, Hãy Kiểm Tra Lại Hóa Đơn Nhé',
+                            title: 'Thanh Toán Thành Công !');
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -185,13 +190,7 @@ class _EnterPinState extends State<EnterPin> {
                                                   BorderRadius.circular(130),
                                             )),
                                           ),
-                                          onPressed: () async {
-                                            await PushNotification.showNotification(
-                                                id: 1,
-                                                body:
-                                                    'Bạn Đã Thanh Toán Đơn Hàng Thành Công, Hãy Kiểm Tra Lại Hóa Đơn Nhé',
-                                                title:
-                                                    'Thanh Toán Thành Công !');
+                                          onPressed: () {
                                             pushScreen(
                                                 context, const ReceiptScreen());
                                           },

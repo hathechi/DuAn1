@@ -83,7 +83,7 @@ void updateDataFireStoreUrl(String? linkUrl, double gia, String chitiet,
   final CollectionReference _products =
       FirebaseFirestore.instance.collection('product');
 
-  String dateTime = DateFormat('dd-MM-yyyy - kk:mm:ss').format(DateTime.now());
+  // String dateTime = DateFormat('dd-MM-yyyy - kk:mm:ss').format(DateTime.now());
 
   final product = Product(
       tensp: name,
@@ -100,6 +100,18 @@ void updateDataFireStoreUrl(String? linkUrl, double gia, String chitiet,
     pop();
   }).catchError((error) => print("Failed to add user: $error"));
   // pop();
+}
+
+void updateLikesDataFireStore(Product product) async {
+//Đường dẫn
+  final CollectionReference _products =
+      FirebaseFirestore.instance.collection('product');
+  final toJson = product.toJson();
+  await _products
+      .doc(product.masp)
+      .update(toJson)
+      .then((value) {})
+      .catchError((error) => print("Failed to add user: $error"));
 }
 
 //Delete Data lên FireBase

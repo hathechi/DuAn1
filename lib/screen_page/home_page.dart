@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/DAO/productDAO.dart';
 
 import 'package:my_app_fluter/modal/brand.dart';
 import 'package:my_app_fluter/modal/product.dart';
@@ -239,6 +240,7 @@ class _PageHomeState extends State<PageHome>
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
+                          listProduct.clear();
                           for (var element in snapshot.data!.docs) {
                             var mapData =
                                 element.data() as Map<String, dynamic>;
@@ -346,11 +348,14 @@ class _PageHomeState extends State<PageHome>
                                               child: IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    _isClickLike =
-                                                        !_isClickLike;
+                                                    listProduct[index].like =
+                                                        !listProduct[index]
+                                                            .like!;
                                                   });
+                                                  updateLikesDataFireStore(
+                                                      listProduct[index]);
                                                 },
-                                                icon: _isClickLike
+                                                icon: listProduct[index].like!
                                                     ? const Icon(
                                                         FontAwesomeIcons
                                                             .heartCircleCheck,

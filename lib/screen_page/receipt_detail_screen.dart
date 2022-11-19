@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/DAO/receiptDAO.dart';
 import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/modal/receipt.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
+import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
 class ReceiptDetail extends StatefulWidget {
   Receipt receipt;
@@ -36,18 +39,18 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Expanded(
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              width: double.infinity,
+              height: double.infinity,
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.25,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -65,6 +68,8 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                         DetailBill(
                             title: 'Phone Number:',
                             content: widget.receipt.phoneNumber!),
+                        DetailBill(
+                            title: 'Name:', content: widget.receipt.nguoinhan!),
                         DetailBill(
                             title: 'Address:',
                             content: widget.receipt.address!),
@@ -101,7 +106,25 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                 ],
               ),
             ),
-            Container(
+          ),
+          Visibility(
+            visible: !widget.receipt.status!,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 176, 176, 176),
+                    offset: Offset(0.0, 1), //(x,y)
+                    blurRadius: 10.0,
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -113,7 +136,10 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                                 const Color.fromARGB(255, 228, 228, 228),
                             shape: (RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(130)))),
-                        onPressed: () {},
+                        onPressed: () {
+                          dialogModalBottomsheet(context, 'Return and Refund',
+                              () => deleteReceipt(context, widget.receipt));
+                        },
                         label: const Text(
                           'Return and Refund',
                           style: TextStyle(
@@ -137,7 +163,11 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                             backgroundColor: Colors.black,
                             shape: (RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(130)))),
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.receipt.status = true;
+                          dialogModalBottomsheet(context, 'Complete Your Order',
+                              () => updateReceipt(context, widget.receipt));
+                        },
                         label: const Text(
                           'Complete Your Order',
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -149,8 +179,8 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -6,6 +6,7 @@ class Product {
   String? chitietsp;
   String? thuonghieusp;
   String? urlImage;
+  bool? like;
   int? slnhap;
   String? masp;
 
@@ -15,6 +16,7 @@ class Product {
       this.chitietsp,
       this.thuonghieusp,
       this.urlImage,
+      this.like = false,
       this.slnhap,
       this.masp});
 
@@ -24,6 +26,7 @@ class Product {
     chitietsp = json['chitietsp'];
     thuonghieusp = json['thuonghieusp'];
     urlImage = json['urlImage'];
+    like = json['like'];
     slnhap = json['slnhap'];
     masp = json['masp'];
   }
@@ -35,6 +38,7 @@ class Product {
     data['chitietsp'] = this.chitietsp;
     data['thuonghieusp'] = this.thuonghieusp;
     data['urlImage'] = this.urlImage;
+    data['like'] = this.like;
     data['slnhap'] = this.slnhap;
     data['masp'] = this.masp;
     return data;

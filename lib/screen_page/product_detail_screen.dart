@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
+import 'package:my_app_fluter/DAO/productDAO.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
@@ -131,10 +132,13 @@ class _ProductDetailState extends State<ProductDetail> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          _isClickLike = !_isClickLike;
+                                          widget.product.like =
+                                              !widget.product.like!;
                                         });
+                                        updateLikesDataFireStore(
+                                            widget.product);
                                       },
-                                      icon: _isClickLike
+                                      icon: widget.product.like!
                                           ? const Icon(
                                               FontAwesomeIcons.heartCircleCheck,
                                               color: Colors.pink,
