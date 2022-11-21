@@ -11,6 +11,7 @@ import 'package:my_app_fluter/DAO/productDAO.dart';
 import 'package:my_app_fluter/modal/brand.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
+import 'package:my_app_fluter/screen_page/search_screen.dart';
 import 'package:my_app_fluter/screen_page/test.dart';
 
 import '../utils/push_screen.dart';
@@ -144,6 +145,9 @@ class _PageHomeState extends State<PageHome>
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 30, 10, 20),
                   child: TextFormField(
+                    showCursor: false,
+                    readOnly: true,
+                    onTap: () => pushScreen(context, SearchScreen()),
                     decoration: const InputDecoration(
                       prefixIcon: Icon(
                         Icons.search_outlined,
@@ -196,28 +200,35 @@ class _PageHomeState extends State<PageHome>
                             itemBuilder: (context, index) {
                               DocumentSnapshot documentSnapshot =
                                   streamSnapshot.data!.docs[index];
-                              return Column(
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: const BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 226, 226, 226),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(100))),
-                                    margin: const EdgeInsets.only(bottom: 5),
-                                    child: Image.network(
-                                      documentSnapshot['urlImage'],
-                                      scale: 3,
+                              return InkWell(
+                                onTap: () => pushScreen(
+                                    context,
+                                    SearchScreen(
+                                      brand: documentSnapshot['tenthuonghieu'],
+                                    )),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: const BoxDecoration(
+                                          color: Color.fromARGB(
+                                              255, 226, 226, 226),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(100))),
+                                      margin: const EdgeInsets.only(bottom: 5),
+                                      child: Image.network(
+                                        documentSnapshot['urlImage'],
+                                        scale: 3,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    documentSnapshot['tenthuonghieu'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                                    Text(
+                                      documentSnapshot['tenthuonghieu'],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           );

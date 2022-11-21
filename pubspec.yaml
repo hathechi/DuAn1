@@ -61,6 +61,8 @@ dependencies:
   pin_code_fields: ^7.4.0
   #notification
   flutter_local_notifications: ^9.6.0
+  #Sales Statistics
+  syncfusion_flutter_charts: ^20.2.39
   
 
 dev_dependencies:

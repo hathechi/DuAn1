@@ -8,6 +8,7 @@ import 'package:my_app_fluter/screen_page/add_product.dart';
 import 'package:my_app_fluter/screen_page/edit_profile_screen.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/screen_page/receipt_screen.dart';
+import 'package:my_app_fluter/screen_page/statistic_page.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
@@ -88,7 +89,12 @@ class _ProfilePageState extends State<ProfilePage>
       listMenu.add(_ItemMenu(
         const Icon(FontAwesomeIcons.chartLine),
         'Sales Statistics',
-        onTap: () {},
+        onTap: () {
+          pushScreen(
+            context,
+            const StatisticScreen(),
+          );
+        },
       ));
       listMenu.add(
         _ItemMenu(
