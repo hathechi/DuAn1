@@ -1,17 +1,15 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:bot_toast/bot_toast.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
-import 'package:my_app_fluter/screen_page/home_page_test.dart';
 import 'package:my_app_fluter/screen_page/likes_page.dart';
 import 'package:my_app_fluter/screen_page/profile_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
 import 'home_page.dart';
 
 final profileUpdateChanged = StreamController<bool>.broadcast();
