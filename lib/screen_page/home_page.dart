@@ -10,6 +10,7 @@ import 'package:my_app_fluter/DAO/productDAO.dart';
 
 import 'package:my_app_fluter/modal/brand.dart';
 import 'package:my_app_fluter/modal/product.dart';
+import 'package:my_app_fluter/screen_page/home_screen.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
 import 'package:my_app_fluter/screen_page/search_screen.dart';
 import 'package:my_app_fluter/screen_page/test.dart';
@@ -50,6 +51,17 @@ class _PageHomeState extends State<PageHome>
       return 'Guest';
     }
     return _auth.currentUser!.displayName!;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    profileUpdateChanged.stream.listen((event) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   Widget getAvatar() {
@@ -419,7 +431,10 @@ class _PageHomeState extends State<PageHome>
                   borderRadius: BorderRadius.circular(20),
                   color: const Color.fromARGB(255, 234, 234, 234),
                 ),
-                child: Image.network(listProduct[itemIndex].urlImage!),
+                child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Image.network(listProduct[itemIndex].urlImage!)),
               ),
               Positioned(
                 top: 20,

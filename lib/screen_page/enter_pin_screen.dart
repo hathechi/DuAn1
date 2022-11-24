@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/DAO/receiptDAO.dart';
 import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/notification/notification.dart';
@@ -135,6 +136,7 @@ class _EnterPinState extends State<EnterPin> {
                           widget.phoneNumber,
                           widget.address,
                         );
+                        deleteAllCart(widget.listCart);
                         await PushNotification.showNotification(
                             id: 1,
                             body:
@@ -223,7 +225,7 @@ class _EnterPinState extends State<EnterPin> {
                                                           130)))),
                                           onPressed: () {
                                             pushAndRemoveUntil(
-                                                child: const HomeScreen());
+                                                child: HomeScreen());
                                           },
                                           child: const Text(
                                             'Home',

@@ -29,7 +29,7 @@ class _CartPageState extends State<CartPage>
       FirebaseFirestore.instance.collection('cart');
   List<Cart> listCart = [];
 
-  double tong = 0;
+  final tong = ValueNotifier<double>(0.0);
   String uid = 'abc';
   @override
   void initState() {
@@ -45,15 +45,15 @@ class _CartPageState extends State<CartPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.black,
-            ),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(
+        //       FontAwesomeIcons.magnifyingGlass,
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        // ],
         title: const Text(
           "Cart Page",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -81,16 +81,19 @@ class _CartPageState extends State<CartPage>
                       (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                     if (streamSnapshot.hasData) {
                       listCart.clear();
-
+                      double _total = 0.0;
                       for (var element in streamSnapshot.data!.docs) {
                         var _item = Cart.fromMap(
-                          (element.data() as Map<String, dynamic>),
-                        );
+                            (element.data() as Map<String, dynamic>));
+                        _total += _item.tongtien!;
                         listCart.add(_item);
                       }
-
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        tong.value = _total;
+                      });
                       return listCart.isEmpty
-                          ? Image.asset('assets/images/nothing.png')
+                          ? Center(
+                              child: Image.asset('assets/images/nothing.png'))
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -130,14 +133,18 @@ class _CartPageState extends State<CartPage>
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: Text('Total Price'),
                       ),
-                      subtitle: Text(
-                        '\$' + tong.toString(),
-                        // tong.toString(),
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      subtitle: ValueListenableBuilder<double>(
+                          valueListenable: tong,
+                          builder: (context, value, child) {
+                            return Text(
+                              '\$' + value.toString(),
+                              // tong.toString(),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold),
+                            );
+                          }),
                     ),
                   ),
                   Expanded(
@@ -228,11 +235,12 @@ class _CartPageState extends State<CartPage>
                           listCart[index].tongtien =
                               listCart[index].giasp! * listCart[index].slsp;
                           updateCart(listCart[index]);
-                          tong = 0;
-                          for (int i = 0; i < listCart.length; i++) {
-                            tong += listCart[i].tongtien!;
-                            log("Cong " + tong.toString());
-                          }
+
+                          // tong = 0;
+                          // for (int i = 0; i < listCart.length; i++) {
+                          //   tong += listCart[i].tongtien!;
+                          //   log("Cong " + tong.toString());
+                          // }
                         }
                       },
                     );
@@ -252,11 +260,11 @@ class _CartPageState extends State<CartPage>
                         listCart[index].tongtien =
                             listCart[index].giasp! * listCart[index].slsp;
                         updateCart(listCart[index]);
-                        tong = 0;
-                        for (int i = 0; i < listCart.length; i++) {
-                          tong += listCart[i].tongtien!;
-                          log("Cong " + tong.toString());
-                        }
+                        // tong = 0;
+                        // for (int i = 0; i < listCart.length; i++) {
+                        //   tong += listCart[i].tongtien!;
+                        //   log("Cong " + tong.toString());
+                        // }
                       },
                     );
                   },
@@ -275,10 +283,10 @@ class _CartPageState extends State<CartPage>
       key: UniqueKey(),
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
-        dismissible: DismissiblePane(onDismissed: () {
-          dialogModalBottomsheet(
-              context, 'Delete', () => deleteCart(listCart[index]));
-        }),
+        // dismissible: DismissiblePane(onDismissed: () {
+        //   dialogModalBottomsheet(
+        //       context, 'Delete', () => deleteCart(listCart[index]));
+        // }),
         children: [
           SlidableAction(
             borderRadius: const BorderRadius.all(
@@ -346,7 +354,10 @@ class _CartPageState extends State<CartPage>
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            dialogModalBottomsheet(context, 'Delete',
+                                () => deleteCart(listCart[index]));
+                          },
                           icon: const Icon(
                             FontAwesomeIcons.trashCan,
                             size: 22,
@@ -378,10 +389,3 @@ class _CartPageState extends State<CartPage>
   @override
   bool get wantKeepAlive => true;
 }
-
-// void totalPrice(List<Cart> listCart) {
-//   for (int i = 0; i < listCart.length; i++) {
-//     tong += listCart[i].tongtien!;
-//     log("Cong " + tong.toString());
-//   }
-// }

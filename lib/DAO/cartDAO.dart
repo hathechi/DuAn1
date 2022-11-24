@@ -9,8 +9,13 @@ import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/showToast.dart';
 
-void addCart(Product product, String size, String color, double tongtien,
-    int soluong) async {
+void addCart(
+    {Product? product,
+    String? size,
+    String? color,
+    double? tongtien,
+    int? soluong,
+    double? gia}) async {
   //Đường dẫn
   final CollectionReference _cart =
       FirebaseFirestore.instance.collection('cart');
@@ -21,13 +26,13 @@ void addCart(Product product, String size, String color, double tongtien,
   String userID = await _auth.currentUser!.uid;
   log(userID);
   final cart = Cart(
-      idsanpham: product.masp,
+      idsanpham: product!.masp,
       tensp: product.tensp,
       kichcosp: size,
       mausp: color,
-      giasp: product.giasp,
+      giasp: gia,
       tongtien: tongtien,
-      slsp: soluong,
+      slsp: soluong!,
       urlImage: product.urlImage,
       thuonghieusp: product.thuonghieusp);
   final cartToJson = cart.toMap();
@@ -92,4 +97,27 @@ void deleteCart(Cart cart) async {
   }).catchError((error) {
     print("Failed to add user: $error");
   });
+}
+
+void deleteAllCart(List<Cart> listCart) async {
+  //Đường dẫn
+  final CollectionReference _cart =
+      FirebaseFirestore.instance.collection('cart');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String userID = _auth.currentUser!.uid;
+
+  for (int i = 0; i < listCart.length; i++) {
+    _cart
+        .doc(userID)
+        .collection('cart')
+        .doc(listCart[i].idsanpham)
+        .delete()
+        .then((value) {
+      // showToast('Xóa Thành Công', Colors.green);
+      // pop();
+    }).catchError((error) {
+      print("Failed to add user: $error");
+    });
+  }
 }

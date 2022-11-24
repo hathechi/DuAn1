@@ -64,7 +64,7 @@ class _ReceiptDetailState extends State<ReceiptDetail> {
                             content: widget.receipt.mahoadon!),
                         DetailBill(
                             title: 'Date created:',
-                            content: widget.receipt.ngaytaohd!),
+                            content: widget.receipt.ngaytaohd!.toString()),
                         DetailBill(
                             title: 'Phone Number:',
                             content: widget.receipt.phoneNumber!),

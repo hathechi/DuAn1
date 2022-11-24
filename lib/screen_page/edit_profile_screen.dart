@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:my_app_fluter/screen_page/home_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/showToast.dart';
 
@@ -215,17 +216,21 @@ class _EditProfileState extends State<EditProfile> {
       String? urlImage;
       if (image == null) {
         try {
+          hideKeyboard();
           showLoading(2);
           urlImage = _auth.currentUser!.photoURL!;
           await _auth.currentUser!.updateDisplayName(_controllerName.text);
           await _auth.currentUser!.updatePhotoURL(urlImage);
           showToast('Sửa Thông Tin Thành Công', Colors.green);
+          profileUpdateChanged.sink.add(true);
+          pop();
         } on FirebaseAuthException catch (e) {
           if (e.message == null) return;
           log(e.message!);
           showToast(e.message!, Colors.red);
         }
       } else {
+        hideKeyboard();
         showLoading(4);
         String timeNow = DateFormat('kk:mm:ss').format(DateTime.now());
         final ref = FirebaseStorage.instance

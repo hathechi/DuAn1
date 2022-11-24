@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:my_app_fluter/modal/cart.dart';
@@ -9,6 +10,7 @@ class Receipt {
   String? mahoadon;
   String? userId;
   String? ngaytaohd;
+  int? filterDate;
   double? tongtien;
   String? address;
   String? phoneNumber;
@@ -19,6 +21,7 @@ class Receipt {
     this.mahoadon,
     this.userId,
     this.ngaytaohd,
+    this.filterDate,
     this.tongtien,
     this.address,
     this.phoneNumber,
@@ -31,6 +34,7 @@ class Receipt {
     String? mahoadon,
     String? userId,
     String? ngaytaohd,
+    int? filterDate,
     double? tongtien,
     String? address,
     String? phoneNumber,
@@ -42,6 +46,7 @@ class Receipt {
       mahoadon: mahoadon ?? this.mahoadon,
       userId: userId ?? this.userId,
       ngaytaohd: ngaytaohd ?? this.ngaytaohd,
+      filterDate: filterDate ?? this.filterDate,
       tongtien: tongtien ?? this.tongtien,
       address: address ?? this.address,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -56,6 +61,7 @@ class Receipt {
       'mahoadon': mahoadon,
       'userId': userId,
       'ngaytaohd': ngaytaohd,
+      'filterDate': filterDate,
       'tongtien': tongtien,
       'address': address,
       'phoneNumber': phoneNumber,
@@ -70,6 +76,7 @@ class Receipt {
       mahoadon: map['mahoadon'] != null ? map['mahoadon'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       ngaytaohd: map['ngaytaohd'] != null ? map['ngaytaohd'] as String : null,
+      filterDate: map['filterDate'] != null ? map['filterDate'] as int : null,
       tongtien: map['tongtien'] != null ? map['tongtien'] as double : null,
       address: map['address'] != null ? map['address'] as String : null,
       phoneNumber:
@@ -93,7 +100,7 @@ class Receipt {
 
   @override
   String toString() {
-    return 'Receipt(mahoadon: $mahoadon, userId: $userId, ngaytaohd: $ngaytaohd, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, nguoinhan: $nguoinhan, status: $status, listCart: $listCart)';
+    return 'Receipt(mahoadon: $mahoadon, userId: $userId, ngaytaohd: $ngaytaohd, filterDate: $filterDate, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, nguoinhan: $nguoinhan, status: $status, listCart: $listCart)';
   }
 
   @override
@@ -103,6 +110,7 @@ class Receipt {
     return other.mahoadon == mahoadon &&
         other.userId == userId &&
         other.ngaytaohd == ngaytaohd &&
+        other.filterDate == filterDate &&
         other.tongtien == tongtien &&
         other.address == address &&
         other.phoneNumber == phoneNumber &&
@@ -116,6 +124,7 @@ class Receipt {
     return mahoadon.hashCode ^
         userId.hashCode ^
         ngaytaohd.hashCode ^
+        filterDate.hashCode ^
         tongtien.hashCode ^
         address.hashCode ^
         phoneNumber.hashCode ^

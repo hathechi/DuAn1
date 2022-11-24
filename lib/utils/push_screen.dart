@@ -68,6 +68,6 @@ void pushAndRemoveUntil({Widget? child}) {
   hideKeyboard();
   navKey.currentState!.pushAndRemoveUntil(
       MaterialPageRoute(
-          builder: (BuildContext context) => child ?? const HomeScreen()),
+          builder: (BuildContext context) => child ?? HomeScreen()),
       (route) => route is HomeScreen);
 }

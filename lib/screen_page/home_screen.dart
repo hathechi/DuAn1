@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +14,11 @@ import 'package:my_app_fluter/screen_page/profile_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'home_page.dart';
 
+final profileUpdateChanged = StreamController<bool>.broadcast();
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  int? currentPageIndex;
+  HomeScreen({super.key, this.currentPageIndex});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,6 +27,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _pageController = PageController();
   final _currentPage = ValueNotifier<int>(0);
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

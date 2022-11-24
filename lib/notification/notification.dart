@@ -16,19 +16,19 @@ class PushNotification {
   static Future<void> intialize() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings settings =
+    const InitializationSettings settings =
         InitializationSettings(android: androidInitializationSettings);
     await _notifications.initialize(settings);
   }
 
-  static Future showNotification({
+  static Future<void> showNotification({
     required int id,
     required String title,
     required String body,
     // String? payload,
   }) async =>
       await _notifications.show(
-        id!,
+        id,
         title,
         body,
         await _notificationDetails(),

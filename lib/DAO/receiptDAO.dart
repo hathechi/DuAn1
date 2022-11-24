@@ -17,10 +17,14 @@ Future addReceipt(
       FirebaseFirestore.instance.collection('receipt');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String timeNow = DateFormat('kk:mm:ss').format(DateTime.now());
-  String dateNow = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  log(timeNow);
-  // ignore: await_only_futures
-  String userID = await _auth.currentUser!.uid;
+  String dateNow = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  int dateFormat = int.parse(DateFormat('yyyyMMdd').format(DateTime.now()));
+
+  // DateFormat dateFormat = DateFormat("dd/MM/yyyy hh:mm:ss");
+  // DateTime dateTime = dateFormat.parse("19/11/2022 04:30:22");
+  log(dateFormat.toString());
+
+  String userID = _auth.currentUser!.uid;
   String nameUser = _auth.currentUser!.displayName!;
   final receipt = Receipt(
       mahoadon: timeNow,
@@ -30,6 +34,7 @@ Future addReceipt(
       userId: userID,
       address: diachi,
       ngaytaohd: dateNow,
+      filterDate: dateFormat,
       listCart: listCart);
   final toMap = receipt.toMap();
   _receipt

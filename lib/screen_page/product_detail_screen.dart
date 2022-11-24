@@ -30,11 +30,11 @@ class _ProductDetailState extends State<ProductDetail> {
   final CollectionReference _brands =
       FirebaseFirestore.instance.collection('brand');
 
-  bool _isClickLike = false;
   int count = 1;
   int currentSize = 0;
   List<String> listSize = ['38', '39', '40', '41', '42', '43'];
   List<String> listColors = ['Đen', 'Xám', 'Hồng', 'Xanh Dương', 'Cam'];
+  List<int> listGiaSize = [0, 5, 10, 15, 20, 25];
   String? chooceSize;
   String? chooceColor;
   double? tongtien;
@@ -276,7 +276,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             child: Text('Total Price'),
                           ),
                           subtitle: Text(
-                            '\$${widget.product.giasp! * count}',
+                            '\$${(widget.product.giasp! * count) + listGiaSize[currentSize]}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 26,
@@ -302,11 +302,14 @@ class _ProductDetailState extends State<ProductDetail> {
                                 pushAndRemoveUntil(child: const Login());
                               } else {
                                 addCart(
-                                    widget.product,
-                                    chooceSize ?? listSize[0],
-                                    chooceColor ?? listColors[0],
-                                    widget.product.giasp! * count,
-                                    count);
+                                    product: widget.product,
+                                    size: chooceSize ?? listSize[0],
+                                    color: chooceColor ?? listColors[0],
+                                    tongtien: (widget.product.giasp! * count) +
+                                        listGiaSize[currentSize],
+                                    soluong: count,
+                                    gia: widget.product.giasp! +
+                                        listGiaSize[currentSize]);
                               }
                             },
                             label: const Text(

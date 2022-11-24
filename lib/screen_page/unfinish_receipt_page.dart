@@ -123,7 +123,9 @@ class _UnfinishReceiptPageState extends State<UnfinishReceiptPage> {
                                               fontSize: 16),
                                         ),
                                         Text(
-                                          listReceipt[index].ngaytaohd!,
+                                          listReceipt[index]
+                                              .ngaytaohd!
+                                              .toString(),
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16),

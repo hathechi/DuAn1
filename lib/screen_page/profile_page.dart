@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/screen_page/add_brand.dart';
 import 'package:my_app_fluter/screen_page/add_product.dart';
 import 'package:my_app_fluter/screen_page/edit_profile_screen.dart';
+import 'package:my_app_fluter/screen_page/home_screen.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/screen_page/receipt_screen.dart';
 import 'package:my_app_fluter/screen_page/statistic_page.dart';
@@ -19,8 +20,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with AutomaticKeepAliveClientMixin {
+class _ProfilePageState extends State<ProfilePage> {
   List<_ItemMenu> listMenu = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -56,6 +56,11 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     _createMenu();
+    profileUpdateChanged.stream.listen((event) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
     super.initState();
   }
 
@@ -76,16 +81,7 @@ class _ProfilePageState extends State<ProfilePage>
           pushScreen(context, const AddBrand());
         },
       ));
-      listMenu.add(_ItemMenu(
-        const Icon(FontAwesomeIcons.userPen),
-        'Edit Profile',
-        onTap: () {
-          pushScreen(
-            context,
-            const EditProfile(),
-          );
-        },
-      ));
+
       listMenu.add(_ItemMenu(
         const Icon(FontAwesomeIcons.chartLine),
         'Sales Statistics',
@@ -109,16 +105,6 @@ class _ProfilePageState extends State<ProfilePage>
         ),
       );
     } else {
-      listMenu.add(_ItemMenu(
-        const Icon(FontAwesomeIcons.userPen),
-        'Edit Profile',
-        onTap: () {
-          pushScreen(
-            context,
-            const EditProfile(),
-          );
-        },
-      ));
       listMenu.add(
         _ItemMenu(
           const Icon(FontAwesomeIcons.windowRestore),
@@ -136,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -165,7 +151,11 @@ class _ProfilePageState extends State<ProfilePage>
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              _avatar(),
+              InkWell(
+                  onTap: () {
+                    pushScreen(context, const EditProfile());
+                  },
+                  child: _avatar()),
               const SizedBox(
                 height: 40,
               ),
@@ -271,14 +261,30 @@ class _ProfilePageState extends State<ProfilePage>
       padding: const EdgeInsets.only(top: 10),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: (70),
-            backgroundColor: const Color.fromARGB(255, 222, 222, 222),
-            child: ClipRRect(
-              borderRadius:
-                  const BorderRadiusDirectional.all(Radius.circular(100)),
-              child: getAvatar(),
-            ),
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: (70),
+                backgroundColor: const Color.fromARGB(255, 222, 222, 222),
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadiusDirectional.all(Radius.circular(100)),
+                  child: getAvatar(),
+                ),
+              ),
+              const Positioned(
+                top: 10,
+                right: 10,
+                child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.black,
+                    child: Icon(
+                      FontAwesomeIcons.pen,
+                      color: Colors.white,
+                      size: 14,
+                    )),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -344,9 +350,6 @@ class _ProfilePageState extends State<ProfilePage>
       },
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class _ItemMenu {
