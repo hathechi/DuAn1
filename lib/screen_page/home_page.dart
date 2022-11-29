@@ -40,7 +40,6 @@ class _PageHomeState extends State<PageHome>
   //Đường dẫn
   final CollectionReference _products = _fireStore.collection('product');
 
-  bool _isClickLike = false;
   //function delay
   Future<void> delay(int millis) async {
     await Future.delayed(Duration(milliseconds: millis));
@@ -55,7 +54,6 @@ class _PageHomeState extends State<PageHome>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileUpdateChanged.stream.listen((event) {
       if (mounted) {
@@ -67,7 +65,7 @@ class _PageHomeState extends State<PageHome>
   Widget getAvatar() {
     if (_auth.currentUser?.photoURL == null) {
       return Image.asset(
-        'assets/images/avatar.jpg',
+        'assets/images/avatar.png',
         fit: BoxFit.contain,
       );
     }

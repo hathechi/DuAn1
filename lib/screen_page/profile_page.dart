@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget getAvatar() {
     if (_auth.currentUser?.photoURL == null) {
       return Image.asset(
-        'assets/images/avatar.jpg',
+        'assets/images/avatar.png',
         fit: BoxFit.cover,
       );
     }
@@ -56,12 +56,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     _createMenu();
+    super.initState();
     profileUpdateChanged.stream.listen((event) {
       if (mounted) {
         setState(() {});
       }
     });
-    super.initState();
   }
 
   void _createMenu() {

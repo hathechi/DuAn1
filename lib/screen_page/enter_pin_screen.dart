@@ -142,106 +142,7 @@ class _EnterPinState extends State<EnterPin> {
                             body:
                                 'Bạn Đã Thanh Toán \$${widget.tongtien.toStringAsFixed(2)} Thành Công, Hãy Kiểm Tra Lại Hóa Đơn Nhé',
                             title: 'Thanh Toán Thành Công !');
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: Container(
-                              height: 500,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const CircleAvatar(
-                                    radius: 80,
-                                    backgroundColor: Colors.black,
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                      size: 100,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Text(
-                                    'Orther successful!',
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Text(
-                                    'You have succsessfuly make orther ',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10, top: 50),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 56,
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.black,
-                                            elevation: 8,
-                                            shape: (RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(130),
-                                            )),
-                                          ),
-                                          onPressed: () {
-                                            pushScreen(
-                                                context, const ReceiptScreen());
-                                          },
-                                          child: const Text(
-                                            'View Order',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10, top: 50),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 56,
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 235, 235, 235),
-                                              elevation: 8,
-                                              shape: (RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          130)))),
-                                          onPressed: () {
-                                            pushAndRemoveUntil(
-                                                child: HomeScreen());
-                                          },
-                                          child: const Text(
-                                            'Home',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                        showAlertDialog();
                       },
                       label: const Text(
                         'Continue',
@@ -250,6 +151,97 @@ class _EnterPinState extends State<EnterPin> {
                       icon: const Icon(
                         FontAwesomeIcons.chevronRight,
                         size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  showAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          height: 500,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircleAvatar(
+                radius: 80,
+                backgroundColor: Colors.black,
+                child: Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 100,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Orther successful!',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'You have succsessfuly make orther ',
+                style: TextStyle(fontSize: 14),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        elevation: 8,
+                        shape: (RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(130),
+                        )),
+                      ),
+                      onPressed: () {
+                        pushScreen(context, const ReceiptScreen());
+                      },
+                      child: const Text(
+                        'View Order',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 235, 235, 235),
+                          elevation: 8,
+                          shape: (RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(130)))),
+                      onPressed: () {
+                        pushAndRemoveUntil(child: HomeScreen());
+                      },
+                      child: const Text(
+                        'Home',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ),
                   ),

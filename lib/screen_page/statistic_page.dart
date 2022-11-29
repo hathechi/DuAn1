@@ -176,7 +176,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                             yValueMapper: (SalesData data, _) => data.sales,
                             // dataLabelMapper: (SalesData data, _) => 'xxx',
                             dataLabelSettings:
-                                DataLabelSettings(isVisible: true)),
+                                const DataLabelSettings(isVisible: true)),
                       ])),
             ),
           ],

@@ -10,7 +10,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/screen_page/googlemap_picker.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
 class CartPage extends StatefulWidget {
@@ -161,11 +163,20 @@ class _CartPageState extends State<CartPage>
                               shape: (RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(130)))),
                           onPressed: () {
-                            pushScreen(
-                                context,
-                                GoogleMapPicker(
-                                  listCart: listCart,
-                                ));
+                            if (_auth.currentUser != null) {
+                              if (listCart.isEmpty) {
+                                showToast('Giỏ Hàng Đang Trống', Colors.red);
+                                return;
+                              }
+                              pushScreen(
+                                  context,
+                                  GoogleMapPicker(
+                                    listCart: listCart,
+                                  ));
+                              return;
+                            }
+                            showToast('Bạn Phải Đăng Nhập Trước', Colors.red);
+                            pushScreen(context, const Login());
                           },
                           label: const Padding(
                             padding: EdgeInsets.all(8.0),

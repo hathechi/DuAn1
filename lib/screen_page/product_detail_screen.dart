@@ -7,12 +7,15 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
+import 'package:my_app_fluter/DAO/commentsDAO.dart';
 import 'package:my_app_fluter/DAO/productDAO.dart';
+import 'package:my_app_fluter/modal/comment.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/showToast.dart';
+import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
 class ProductDetail extends StatefulWidget {
   late Product product;
@@ -162,6 +165,34 @@ class _ProductDetailState extends State<ProductDetail> {
                                   ),
                                 ),
                                 subtitle: Text(widget.product.chitietsp!),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 20),
+                                width: double.infinity,
+                                height: 42,
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black,
+                                      elevation: 8,
+                                      shape: (RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(130),
+                                      )),
+                                    ),
+                                    onPressed: () {
+                                      _openBottomSheetComment(
+                                          context, widget.product.masp!);
+                                    },
+                                    child: const Text(
+                                      'Reviews from client',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Row(
                                 children: [
@@ -439,10 +470,211 @@ class _ProductDetailState extends State<ProductDetail> {
       ),
     );
   }
+
+  void _openBottomSheetComment(BuildContext context, String idsp) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      builder: (context) {
+        return BottomSheet(
+          idsanpham: idsp,
+        );
+      },
+    );
+  }
 }
 
 class ChoiceColor {
   final Color? mColor;
 
   ChoiceColor(this.mColor);
+}
+
+class BottomSheet extends StatefulWidget {
+  final String? idsanpham;
+  const BottomSheet({super.key, this.idsanpham});
+
+  @override
+  State<BottomSheet> createState() => _BottomSheetState();
+}
+
+class _BottomSheetState extends State<BottomSheet> {
+  //Đường dẫn
+  final CollectionReference _comment =
+      FirebaseFirestore.instance.collection('comments');
+
+  List<Comment> listComment = [];
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Wrap(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 20),
+                    height: 400,
+                    // height: MediaQuery.of(context).size.height * 0.5,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: StreamBuilder(
+                        stream: _comment
+                            .where('idsanpham', isEqualTo: widget.idsanpham)
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                          if (streamSnapshot.hasData) {
+                            listComment.clear();
+                            for (var element in streamSnapshot.data!.docs) {
+                              var _item = Comment.fromMap(
+                                (element.data() as Map<String, dynamic>),
+                              );
+                              listComment.add(_item);
+                            }
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: listComment.length,
+                              itemBuilder: (context, index) {
+                                return listComment.isEmpty
+                                    ? Image.asset('assets/images/nothing.png')
+                                    : Stack(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    255, 190, 207, 217),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            margin: const EdgeInsets.all(5),
+                                            height: 80,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                CircleAvatar(
+                                                  radius: 25,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadiusDirectional
+                                                                .all(
+                                                            Radius.circular(
+                                                                200)),
+                                                    child: Image.network(
+                                                      listComment[index]
+                                                          .urlImageAvatar!,
+                                                      width: double.infinity,
+                                                      height: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Expanded(
+                                                  flex: 5,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                        listComment[index]
+                                                            .name!,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      Wrap(
+                                                        children: [
+                                                          listComment[index]
+                                                                      .content!
+                                                                      .length >=
+                                                                  60
+                                                              ? Text(listComment[
+                                                                          index]
+                                                                      .content!
+                                                                      .substring(
+                                                                          0,
+                                                                          60) +
+                                                                  '...')
+                                                              : Text(listComment[
+                                                                      index]
+                                                                  .content!),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            right: 10,
+                                            child: InkWell(
+                                              onTap: () {
+                                                dialogModalBottomsheet(
+                                                    context,
+                                                    'Delete',
+                                                    () => deleteComment(
+                                                        listComment[index]
+                                                            .idComment!));
+                                              },
+                                              child: const CircleAvatar(
+                                                radius: 20,
+                                                backgroundColor: Colors.black,
+                                                child: Icon(
+                                                  FontAwesomeIcons.trashCan,
+                                                  color: Colors.white,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                              },
+                            );
+                          }
+                          return const Card();
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
