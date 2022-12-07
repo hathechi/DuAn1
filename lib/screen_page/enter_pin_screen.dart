@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/DAO/receiptDAO.dart';
+import 'package:my_app_fluter/PDF/print_pdf.dart';
 import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/notification/notification.dart';
 import 'package:my_app_fluter/screen_page/home_screen.dart';
@@ -35,7 +36,6 @@ class _EnterPinState extends State<EnterPin> {
   final pinController = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     PushNotification.intialize();
     super.initState();
   }
@@ -136,6 +136,7 @@ class _EnterPinState extends State<EnterPin> {
                           widget.phoneNumber,
                           widget.address,
                         );
+
                         deleteAllCart(widget.listCart);
                         await PushNotification.showNotification(
                             id: 1,
@@ -168,7 +169,7 @@ class _EnterPinState extends State<EnterPin> {
       context: context,
       builder: (context) => AlertDialog(
         content: SizedBox(
-          height: 500,
+          height: 600,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

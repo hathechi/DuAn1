@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/PDF/print_pdf.dart';
 import 'package:my_app_fluter/screen_page/add_brand.dart';
 import 'package:my_app_fluter/screen_page/add_product.dart';
 import 'package:my_app_fluter/screen_page/edit_profile_screen.dart';
@@ -65,8 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _createMenu() {
-    if (ischeckLogin() &&
-        _auth.currentUser!.email == 'thechi1832000@gmail.com') {
+    if (ischeckLogin() && _auth.currentUser!.displayName == 'admin') {
       listMenu.add(_ItemMenu(
         const Icon(FontAwesomeIcons.gears),
         'Product Management ',

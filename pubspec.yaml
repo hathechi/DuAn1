@@ -63,6 +63,12 @@ dependencies:
   flutter_local_notifications: ^9.6.0
   #Sales Statistics
   syncfusion_flutter_charts: ^20.2.39
+  #PDF
+  syncfusion_flutter_pdf: ^20.3.48
+  path_provider: ^2.0.11
+  open_file: ^3.2.1
+  #Permission
+  permission_handler: ^10.1.0
   
 
 dev_dependencies:

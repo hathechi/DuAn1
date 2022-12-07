@@ -119,7 +119,7 @@ class _RegisterState extends State<Register> {
                                             width: 200,
                                           )
                                         : Image.asset(
-                                            "assets/images/avatar.jpg",
+                                            "assets/images/choose.jpg",
                                             fit: BoxFit.cover,
                                           ),
                                   ),

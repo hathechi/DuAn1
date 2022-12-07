@@ -28,7 +28,7 @@ class _EditProfileState extends State<EditProfile> {
   Future getImage() async {
     try {
       final image = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 30);
+          .pickImage(source: ImageSource.gallery, imageQuality: 10);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() {

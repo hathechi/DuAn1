@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_app_fluter/PDF/print_pdf.dart';
 import 'package:my_app_fluter/modal/receipt.dart';
 import 'package:my_app_fluter/screen_page/receipt_detail_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
@@ -72,84 +73,107 @@ class _UnfinishReceiptPageState extends State<UnfinishReceiptPage> {
                             ),
                           ],
                         ),
-                        child: Row(
+                        child: Stack(
                           children: [
-                            const Expanded(
-                              flex: 1,
-                              child: CircleAvatar(
-                                radius: 36,
-                                backgroundColor: Colors.black,
-                                child: Icon(
-                                  FontAwesomeIcons.truckFast,
-                                  color: Colors.white,
-                                  size: 26,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: const [
-                                        Text('Code Bill:'),
-                                        Text('Date created:'),
-                                        Text('Total Price:'),
-                                        Text('Status:'),
-                                      ],
+                            Row(
+                              children: [
+                                const Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    radius: 36,
+                                    backgroundColor: Colors.black,
+                                    child: Icon(
+                                      FontAwesomeIcons.truckFast,
+                                      color: Colors.white,
+                                      size: 26,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          listReceipt[index].mahoadon!,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          listReceipt[index]
-                                              .ngaytaohd!
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          '\$${listReceipt[index].tongtien!.toStringAsFixed(3)}',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Wrap(
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: const [
+                                            Text('Code Bill:'),
+                                            Text('Date created:'),
+                                            Text('Total Price:'),
+                                            Text('Status:'),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
                                             Text(
-                                              'Chưa Hoàn Thành',
-                                              style: TextStyle(
+                                              listReceipt[index].mahoadon!,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16),
                                             ),
+                                            Text(
+                                              listReceipt[index]
+                                                  .ngaytaohd!
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              '\$${listReceipt[index].tongtien!.toStringAsFixed(3)}',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Wrap(
+                                              children: const [
+                                                Text(
+                                                  'Chưa Hoàn Thành',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            )
                                           ],
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () {
+                                  printPdf(
+                                    listReceipt[index].listCart!,
+                                    listReceipt[index].tongtien!,
+                                    listReceipt[index].phoneNumber!,
+                                    listReceipt[index].address!,
+                                  );
+                                },
+                                icon: const Icon(
+                                  FontAwesomeIcons.print,
+                                  size: 26,
+                                ),
                               ),
                             ),
                           ],

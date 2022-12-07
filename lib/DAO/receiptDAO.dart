@@ -68,6 +68,23 @@ Future updateReceipt(BuildContext context, Receipt itemReceipt) async {
   });
 }
 
+// Future updatePDFReceipt(String urlPDF) async {
+//   //Đường dẫn
+//   final CollectionReference _receipt =
+//       FirebaseFirestore.instance.collection('receipt');
+
+//   // final toMap = itemReceipt.toMap();
+//   _receipt
+//       .doc('3piiGueGR4NHfFxVRBgxD3pEuxp1')
+//       .collection('receipt')
+//       .doc('01:02:50')
+//       .update({"urlPDF": urlPDF}).then((value) {
+//     showToast('Update OK', Colors.green);
+//   }).catchError((error) {
+//     print("Failed to add user: $error");
+//   });
+// }
+
 Future deleteReceipt(BuildContext context, Receipt itemReceipt) async {
   //Đường dẫn
   final CollectionReference _receipt =
