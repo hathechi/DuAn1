@@ -168,10 +168,7 @@ class _CompleteReceiptPageState extends State<CompleteReceiptPage> {
                               child: IconButton(
                                 onPressed: () {
                                   printPdf(
-                                    listReceipt[index].listCart!,
-                                    listReceipt[index].tongtien!,
-                                    listReceipt[index].phoneNumber!,
-                                    listReceipt[index].address!,
+                                    listReceipt[index],
                                   );
                                 },
                                 icon: const Icon(

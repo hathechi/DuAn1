@@ -15,6 +15,7 @@ class Receipt {
   String? address;
   String? phoneNumber;
   String? nguoinhan;
+  String? phantramgiam;
   bool? status;
   List<Cart>? listCart;
   Receipt({
@@ -26,6 +27,7 @@ class Receipt {
     this.address,
     this.phoneNumber,
     this.nguoinhan,
+    this.phantramgiam,
     this.status = false,
     this.listCart,
   });
@@ -39,6 +41,7 @@ class Receipt {
     String? address,
     String? phoneNumber,
     String? nguoinhan,
+    String? phantramgiam,
     bool? status,
     List<Cart>? listCart,
   }) {
@@ -51,6 +54,7 @@ class Receipt {
       address: address ?? this.address,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       nguoinhan: nguoinhan ?? this.nguoinhan,
+      phantramgiam: phantramgiam ?? this.phantramgiam,
       status: status ?? this.status,
       listCart: listCart ?? this.listCart,
     );
@@ -66,6 +70,7 @@ class Receipt {
       'address': address,
       'phoneNumber': phoneNumber,
       'nguoinhan': nguoinhan,
+      'phantramgiam': phantramgiam,
       'status': status,
       'listCart': listCart!.map((x) => x.toMap()).toList(),
     };
@@ -82,6 +87,8 @@ class Receipt {
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
       nguoinhan: map['nguoinhan'] != null ? map['nguoinhan'] as String : null,
+      phantramgiam:
+          map['phantramgiam'] != null ? map['phantramgiam'] as String : null,
       status: map['status'] != null ? map['status'] as bool : null,
       listCart: map['listCart'] != null
           ? List<Cart>.from(
@@ -100,7 +107,7 @@ class Receipt {
 
   @override
   String toString() {
-    return 'Receipt(mahoadon: $mahoadon, userId: $userId, ngaytaohd: $ngaytaohd, filterDate: $filterDate, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, nguoinhan: $nguoinhan, status: $status, listCart: $listCart)';
+    return 'Receipt(mahoadon: $mahoadon, userId: $userId, ngaytaohd: $ngaytaohd, filterDate: $filterDate, tongtien: $tongtien, address: $address, phoneNumber: $phoneNumber, nguoinhan: $nguoinhan, phantramgiam: $phantramgiam, status: $status, listCart: $listCart)';
   }
 
   @override
@@ -115,6 +122,7 @@ class Receipt {
         other.address == address &&
         other.phoneNumber == phoneNumber &&
         other.nguoinhan == nguoinhan &&
+        other.phantramgiam == phantramgiam &&
         other.status == status &&
         listEquals(other.listCart, listCart);
   }
@@ -129,6 +137,7 @@ class Receipt {
         address.hashCode ^
         phoneNumber.hashCode ^
         nguoinhan.hashCode ^
+        phantramgiam.hashCode ^
         status.hashCode ^
         listCart.hashCode;
   }

@@ -69,6 +69,8 @@ dependencies:
   open_file: ^3.2.1
   #Permission
   permission_handler: ^10.1.0
+  #bodau
+  tiengviet: ^0.5.0
   
 
 dev_dependencies:

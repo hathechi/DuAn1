@@ -19,13 +19,14 @@ class EnterPin extends StatefulWidget {
   double tongtien;
   String address;
   String phoneNumber;
-
+  String phantramgiam;
   EnterPin(
       {super.key,
       required this.listCart,
       required this.tongtien,
       required this.address,
-      required this.phoneNumber});
+      required this.phoneNumber,
+      required this.phantramgiam});
 
   @override
   State<EnterPin> createState() => _EnterPinState();
@@ -131,11 +132,11 @@ class _EnterPinState extends State<EnterPin> {
                           return;
                         }
                         await addReceipt(
-                          widget.listCart,
-                          widget.tongtien,
-                          widget.phoneNumber,
-                          widget.address,
-                        );
+                            widget.listCart,
+                            widget.tongtien,
+                            widget.phoneNumber,
+                            widget.address,
+                            widget.phantramgiam);
 
                         deleteAllCart(widget.listCart);
                         await PushNotification.showNotification(
@@ -166,6 +167,7 @@ class _EnterPinState extends State<EnterPin> {
 
   showAlertDialog() {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         content: SizedBox(

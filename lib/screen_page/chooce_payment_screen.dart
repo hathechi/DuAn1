@@ -10,12 +10,14 @@ class ChoocePayMent extends StatefulWidget {
   double tongtien;
   String address;
   String phoneNumber;
+  String phantramgiam;
   ChoocePayMent(
       {super.key,
       required this.listCart,
       required this.tongtien,
       required this.address,
-      required this.phoneNumber});
+      required this.phoneNumber,
+      required this.phantramgiam});
 
   @override
   State<ChoocePayMent> createState() => _ChoocePayMentState();
@@ -124,6 +126,7 @@ class _ChoocePayMentState extends State<ChoocePayMent> {
                                   listCart: widget.listCart,
                                   tongtien: widget.tongtien,
                                   address: widget.address,
+                                  phantramgiam: widget.phantramgiam!,
                                   phoneNumber: widget.phoneNumber,
                                 )),
                             splashColor: Colors.pink,

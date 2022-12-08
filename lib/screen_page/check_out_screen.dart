@@ -225,6 +225,7 @@ class _CheckOutState extends State<CheckOut> {
                               ChoocePayMent(
                                 listCart: widget.listCart,
                                 tongtien: tongtien!,
+                                phantramgiam: widget.phantramgiam!,
                                 phoneNumber: _phoneNumberController.text,
                                 address: widget.address!,
                               ),

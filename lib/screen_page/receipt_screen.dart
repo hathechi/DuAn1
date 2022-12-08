@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/modal/receipt.dart';
 import 'package:my_app_fluter/screen_page/complete_receipt_page.dart';
+import 'package:my_app_fluter/screen_page/home_screen.dart';
 import 'package:my_app_fluter/screen_page/receipt_detail_screen.dart';
 import 'package:my_app_fluter/screen_page/unfinish_receipt_page.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
@@ -24,6 +25,14 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              pushAndRemoveUntil(child: HomeScreen());
+            },
+            icon: const Icon(FontAwesomeIcons.home),
+          ),
+        ],
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,

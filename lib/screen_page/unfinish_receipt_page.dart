@@ -164,10 +164,7 @@ class _UnfinishReceiptPageState extends State<UnfinishReceiptPage> {
                               child: IconButton(
                                 onPressed: () {
                                   printPdf(
-                                    listReceipt[index].listCart!,
-                                    listReceipt[index].tongtien!,
-                                    listReceipt[index].phoneNumber!,
-                                    listReceipt[index].address!,
+                                    listReceipt[index],
                                   );
                                 },
                                 icon: const Icon(

@@ -10,8 +10,8 @@ import 'package:my_app_fluter/screen_page/receipt_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 import 'package:my_app_fluter/utils/showToast.dart';
 
-Future addReceipt(
-    List<Cart> listCart, double tongtien, String sdt, String diachi) async {
+Future addReceipt(List<Cart> listCart, double tongtien, String sdt,
+    String diachi, String phantramgiam) async {
   //Đường dẫn
   final CollectionReference _receipt =
       FirebaseFirestore.instance.collection('receipt');
@@ -33,6 +33,7 @@ Future addReceipt(
       nguoinhan: nameUser,
       userId: userID,
       address: diachi,
+      phantramgiam: phantramgiam,
       ngaytaohd: dateNow,
       filterDate: dateFormat,
       listCart: listCart);

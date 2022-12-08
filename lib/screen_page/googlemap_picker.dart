@@ -197,6 +197,10 @@ class _GoogleMapPickerState extends State<GoogleMapPicker> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
+                        if (_controllerMaps.text.trim() == '') {
+                          showToast('Chưa Chọn Địa Chỉ', Colors.red);
+                          return;
+                        }
                         pushScreen(
                           context,
                           CheckOut(
