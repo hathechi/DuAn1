@@ -50,6 +50,7 @@ class _LoginState extends State<Login> {
       width: double.infinity,
       height: double.infinity,
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -65,11 +66,11 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                       child: Container(
                         child: Text(
-                          "Create Your Account",
+                          "Login now to experience",
                           style: GoogleFonts.comfortaa(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
-                            fontSize: 28,
+                            fontSize: 38,
                           ),
                         ),
                       ),
@@ -347,7 +348,8 @@ class _LoginState extends State<Login> {
       await _auth.signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPass.text);
     } on FirebaseAuthException catch (e) {
-      showToast(e.code, Colors.red);
+      // showToast(e.code, Colors.red);
+      showToast('Sai Tài Khoản Hoặc Mật Khẩu', Colors.red);
     }
   }
 }

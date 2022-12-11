@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/productDAO.dart';
 import 'package:my_app_fluter/modal/product.dart';
+import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/screen_page/product_detail_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 
 class LikesPage extends StatefulWidget {
   const LikesPage({super.key});
@@ -18,11 +21,22 @@ class LikesPage extends StatefulWidget {
 
 class _LikesPageState extends State<LikesPage> {
   final List<Product> listProduct = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //Đường dẫn
   final CollectionReference _products =
       FirebaseFirestore.instance.collection('product');
   int count = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_auth.currentUser == null) {
+      showToast('Bạn Phải Đăng Nhập Trước', Colors.red);
+      pushReplacement(context, const Login());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

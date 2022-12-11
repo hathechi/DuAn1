@@ -63,7 +63,6 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _controllerName.text = getNameUser();
   }
@@ -194,6 +193,10 @@ class _EditProfileState extends State<EditProfile> {
                           borderRadius: BorderRadius.circular(130)))),
                   onPressed: () {
                     if (navKey1.currentState!.validate()) {
+                      if (_controllerName.text == 'admin') {
+                        showToast('Tên Này Đã Được Sử Dụng', Colors.red);
+                        return;
+                      }
                       editProfile();
                     }
                   },

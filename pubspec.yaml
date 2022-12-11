@@ -71,6 +71,8 @@ dependencies:
   permission_handler: ^10.1.0
   #bodau
   tiengviet: ^0.5.0
+  #giohang
+  badges: ^2.0.3
   
 
 dev_dependencies:

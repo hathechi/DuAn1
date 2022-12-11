@@ -12,6 +12,7 @@ import 'package:my_app_fluter/screen_page/login_screen.dart';
 import 'package:my_app_fluter/screen_page/receipt_screen.dart';
 import 'package:my_app_fluter/screen_page/statistic_page.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
+import 'package:my_app_fluter/utils/showToast.dart';
 import 'package:my_app_fluter/utils/show_bottom_sheet.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -105,18 +106,20 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
     } else {
-      listMenu.add(
-        _ItemMenu(
-          const Icon(FontAwesomeIcons.windowRestore),
-          'Receipt',
-          onTap: () {
-            pushScreen(
-              context,
-              const ReceiptScreen(),
-            );
-          },
-        ),
-      );
+      if (_auth.currentUser != null) {
+        listMenu.add(
+          _ItemMenu(
+            const Icon(FontAwesomeIcons.windowRestore),
+            'Receipt',
+            onTap: () {
+              pushScreen(
+                context,
+                const ReceiptScreen(),
+              );
+            },
+          ),
+        );
+      }
     }
   }
 
@@ -153,7 +156,12 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               InkWell(
                   onTap: () {
-                    pushScreen(context, const EditProfile());
+                    if (_auth.currentUser != null) {
+                      pushScreen(context, const EditProfile());
+                      return;
+                    }
+                    showToast('Bạn Phải Đăng Nhập Để Thực Hiện Chức Năng Này',
+                        Colors.red);
                   },
                   child: _avatar()),
               const SizedBox(
@@ -207,14 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               InkWell(
                 onTap: () {
-                  dialogModalBottomsheet(context, 'Login', () async {
-                    if (_auth.currentUser != null) {
-                      await _auth.signOut();
-                      pushReplacement(context, const Login());
-                    } else {
-                      pushAndRemoveUntil(child: const Login());
-                    }
-                  });
+                  pushAndRemoveUntil(child: const Login());
                 },
                 child: Visibility(
                   visible: !ischeckLogin(),

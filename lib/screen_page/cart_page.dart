@@ -33,12 +33,15 @@ class _CartPageState extends State<CartPage>
 
   final tong = ValueNotifier<double>(0.0);
   String uid = 'abc';
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (_auth.currentUser != null) {
       uid = _auth.currentUser!.uid;
+    } else {
+      showToast('Bạn Phải Đăng Nhập Trước', Colors.red);
+      pushReplacement(context, const Login());
     }
   }
 
@@ -47,15 +50,6 @@ class _CartPageState extends State<CartPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: const Icon(
-        //       FontAwesomeIcons.magnifyingGlass,
-        //       color: Colors.black,
-        //     ),
-        //   ),
-        // ],
         title: const Text(
           "Cart Page",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -90,12 +84,16 @@ class _CartPageState extends State<CartPage>
                         _total += _item.tongtien!;
                         listCart.add(_item);
                       }
+
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         tong.value = _total;
                       });
+
                       return listCart.isEmpty
-                          ? Center(
-                              child: Image.asset('assets/images/nothing.png'))
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 150),
+                              child: Image.asset('assets/images/nothing.png'),
+                            )
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -175,8 +173,6 @@ class _CartPageState extends State<CartPage>
                                   ));
                               return;
                             }
-                            showToast('Bạn Phải Đăng Nhập Trước', Colors.red);
-                            pushScreen(context, const Login());
                           },
                           label: const Padding(
                             padding: EdgeInsets.all(8.0),

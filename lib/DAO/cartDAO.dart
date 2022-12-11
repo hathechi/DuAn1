@@ -44,7 +44,7 @@ void addCart(
       .set(cartToJson)
       .then((value) {
     showToast('Thêm Vào Giỏ Hàng Thành Công', Colors.green);
-    pop();
+    // pop();
   }).catchError((error) {
     print("Failed to add user: $error");
   });

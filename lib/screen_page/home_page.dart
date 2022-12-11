@@ -40,10 +40,7 @@ class _PageHomeState extends State<PageHome>
   //Đường dẫn
   final CollectionReference _products = _fireStore.collection('product');
 
-  //function delay
-  Future<void> delay(int millis) async {
-    await Future.delayed(Duration(milliseconds: millis));
-  }
+  bool isCheckLogin = false;
 
   String getNameUser() {
     if (_auth.currentUser?.displayName == null) {
@@ -60,6 +57,9 @@ class _PageHomeState extends State<PageHome>
         setState(() {});
       }
     });
+    if (_auth.currentUser != null) {
+      isCheckLogin = true;
+    }
   }
 
   Widget getAvatar() {
@@ -363,29 +363,33 @@ class _PageHomeState extends State<PageHome>
                                                 height: 180,
                                               ),
                                             ),
-                                            Positioned(
-                                              right: 0,
-                                              bottom: 0,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    listProduct[index].like =
-                                                        !listProduct[index]
-                                                            .like!;
-                                                  });
-                                                  updateLikesDataFireStore(
-                                                      listProduct[index]);
-                                                },
-                                                icon: listProduct[index].like!
-                                                    ? const Icon(
-                                                        FontAwesomeIcons
-                                                            .heartCircleCheck,
-                                                        color: Colors.pink,
-                                                      )
-                                                    : const Icon(
-                                                        FontAwesomeIcons.heart,
-                                                        color: Colors.pink,
-                                                      ),
+                                            Visibility(
+                                              visible: isCheckLogin,
+                                              child: Positioned(
+                                                right: 0,
+                                                bottom: 0,
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      listProduct[index].like =
+                                                          !listProduct[index]
+                                                              .like!;
+                                                    });
+                                                    updateLikesDataFireStore(
+                                                        listProduct[index]);
+                                                  },
+                                                  icon: listProduct[index].like!
+                                                      ? const Icon(
+                                                          FontAwesomeIcons
+                                                              .heartCircleCheck,
+                                                          color: Colors.pink,
+                                                        )
+                                                      : const Icon(
+                                                          FontAwesomeIcons
+                                                              .heart,
+                                                          color: Colors.pink,
+                                                        ),
+                                                ),
                                               ),
                                             )
                                           ],

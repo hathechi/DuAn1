@@ -39,7 +39,7 @@ class _RegisterState extends State<Register> {
   Future getImage() async {
     try {
       final image = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 30);
+          .pickImage(source: ImageSource.gallery, imageQuality: 20);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() {
@@ -146,7 +146,7 @@ class _RegisterState extends State<Register> {
                                   AutovalidateMode.onUserInteraction,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return "Không Bỏ Trống Họ và tên";
+                                  return "Không Bỏ Trống Tên";
                                 }
                                 // if (!RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
                                 //   return "Tên Không Chứa Ký Tự Đặc Biệt Hoặc Số";
@@ -218,7 +218,7 @@ class _RegisterState extends State<Register> {
                                         Colors.red);
                                   } else {
                                     hideKeyboard();
-                                    onClickSignIn();
+                                    onClickSignUp();
                                   }
                                 }
                               },
@@ -240,7 +240,7 @@ class _RegisterState extends State<Register> {
                             child: Text(
                               " SIGN IN NOW! ",
                               style: GoogleFonts.comfortaa(
-                                color: Colors.grey,
+                                color: Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -427,9 +427,13 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  void onClickSignIn() async {
+  void onClickSignUp() async {
     if (image == null) {
       showToast('Bạn Chưa Chọn Avatar', Colors.red);
+      return;
+    }
+    if (_controllerUserName.text == "admin") {
+      showToast('Bạn không có quyền sử dụng tên "Admin" này', Colors.red);
       return;
     }
     showLoading(4);
@@ -439,7 +443,7 @@ class _RegisterState extends State<Register> {
     String urlImage;
     await ref.putFile(image!);
     urlImage = await ref.getDownloadURL();
-
+    log(urlImage);
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(

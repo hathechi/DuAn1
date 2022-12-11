@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/DAO/commentsDAO.dart';
 import 'package:my_app_fluter/DAO/productDAO.dart';
+import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/modal/comment.dart';
 import 'package:my_app_fluter/modal/product.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
@@ -29,9 +31,12 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   //Đường dẫn
-  final CollectionReference _brands =
-      FirebaseFirestore.instance.collection('brand');
+  final CollectionReference _cart =
+      FirebaseFirestore.instance.collection('cart');
+  List<Cart> listCart = [];
+  int countItemCart = 0;
 
   int count = 1;
   int currentSize = 0;
@@ -49,6 +54,37 @@ class _ProductDetailState extends State<ProductDetail> {
     ChoiceColor(Colors.blue.shade900),
     ChoiceColor(Colors.orange),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (_auth.currentUser != null) {
+      countCart();
+    }
+  }
+
+  void countCart() {
+    log(_auth.currentUser!.uid);
+    _cart
+        .doc(_auth.currentUser!.uid)
+        .collection('cart')
+        .snapshots()
+        .listen((data) {
+      listCart.clear();
+      for (int i = 0; i < data.docs.length; i++) {
+        var item = Cart.fromMap(data.docs[i].data());
+        listCart.add(item);
+      }
+
+      //   countItemCart = listCart.length;
+      // log("detail " + countItemCart.toString());
+
+      setState(() {
+        countItemCart = listCart.length;
+        log("detail " + countItemCart.toString());
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +106,19 @@ class _ProductDetailState extends State<ProductDetail> {
                 );
               }
             },
-            icon: const Icon(
-              FontAwesomeIcons.cartArrowDown,
-              size: 28,
-            ),
-          )
+            icon: _auth.currentUser != null
+                ? Badge(
+                    padding: const EdgeInsets.all(6),
+                    position: BadgePosition.topEnd(top: -15, end: -10),
+                    badgeContent: Text(
+                      countItemCart.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    badgeColor: Colors.pink,
+                    child: const Icon(FontAwesomeIcons.cartShopping),
+                  )
+                : const Card(),
+          ),
         ],
         centerTitle: true,
         elevation: 0,
@@ -132,25 +176,28 @@ class _ProductDetailState extends State<ProductDetail> {
                                         ],
                                       ),
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          widget.product.like =
-                                              !widget.product.like!;
-                                        });
-                                        updateLikesDataFireStore(
-                                            widget.product);
-                                      },
-                                      icon: widget.product.like!
-                                          ? const Icon(
-                                              FontAwesomeIcons.heartCircleCheck,
-                                              color: Colors.pink,
-                                            )
-                                          : const Icon(
-                                              FontAwesomeIcons.heart,
-                                              color: Colors.pink,
-                                            ),
-                                    ),
+                                    _auth.currentUser != null
+                                        ? IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                widget.product.like =
+                                                    !widget.product.like!;
+                                              });
+                                              updateLikesDataFireStore(
+                                                  widget.product);
+                                            },
+                                            icon: widget.product.like!
+                                                ? const Icon(
+                                                    FontAwesomeIcons
+                                                        .heartCircleCheck,
+                                                    color: Colors.pink,
+                                                  )
+                                                : const Icon(
+                                                    FontAwesomeIcons.heart,
+                                                    color: Colors.pink,
+                                                  ),
+                                          )
+                                        : const Card(),
                                   ],
                                 ),
                               ),
@@ -333,14 +380,15 @@ class _ProductDetailState extends State<ProductDetail> {
                                 pushAndRemoveUntil(child: const Login());
                               } else {
                                 addCart(
-                                    product: widget.product,
-                                    size: chooceSize ?? listSize[0],
-                                    color: chooceColor ?? listColors[0],
-                                    tongtien: (widget.product.giasp! * count) +
-                                        listGiaSize[currentSize],
-                                    soluong: count,
-                                    gia: widget.product.giasp! +
-                                        listGiaSize[currentSize]);
+                                  product: widget.product,
+                                  size: chooceSize ?? listSize[0],
+                                  color: chooceColor ?? listColors[0],
+                                  tongtien: (widget.product.giasp! * count) +
+                                      listGiaSize[currentSize],
+                                  soluong: count,
+                                  gia: widget.product.giasp! +
+                                      listGiaSize[currentSize],
+                                );
                               }
                             },
                             label: const Text(
@@ -508,6 +556,7 @@ class _BottomSheetState extends State<BottomSheet> {
   //Đường dẫn
   final CollectionReference _comment =
       FirebaseFirestore.instance.collection('comments');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<Comment> listComment = [];
   @override
@@ -548,14 +597,15 @@ class _BottomSheetState extends State<BottomSheet> {
                               );
                               listComment.add(_item);
                             }
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: listComment.length,
-                              itemBuilder: (context, index) {
-                                return listComment.isEmpty
-                                    ? Image.asset('assets/images/nothing.png')
-                                    : Stack(
+                            return listComment.isEmpty
+                                ? Image.asset('assets/images/nothing.png')
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: listComment.length,
+                                    itemBuilder: (context, index) {
+                                      return Stack(
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.all(5),
@@ -636,33 +686,40 @@ class _BottomSheetState extends State<BottomSheet> {
                                               ],
                                             ),
                                           ),
-                                          Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: InkWell(
-                                              onTap: () {
-                                                dialogModalBottomsheet(
-                                                    context,
-                                                    'Delete',
-                                                    () => deleteComment(
-                                                        listComment[index]
-                                                            .idComment!));
-                                              },
-                                              child: const CircleAvatar(
-                                                radius: 20,
-                                                backgroundColor: Colors.black,
-                                                child: Icon(
-                                                  FontAwesomeIcons.trashCan,
-                                                  color: Colors.white,
-                                                  size: 18,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          _auth.currentUser != null &&
+                                                  _auth.currentUser!
+                                                          .displayName ==
+                                                      'admin'
+                                              ? Positioned(
+                                                  top: 10,
+                                                  right: 10,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      dialogModalBottomsheet(
+                                                          context,
+                                                          'Delete',
+                                                          () => deleteComment(
+                                                              listComment[index]
+                                                                  .idComment!));
+                                                    },
+                                                    child: const CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                      child: Icon(
+                                                        FontAwesomeIcons
+                                                            .trashCan,
+                                                        color: Colors.white,
+                                                        size: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const Card(),
                                         ],
                                       );
-                              },
-                            );
+                                    },
+                                  );
                           }
                           return const Card();
                         },
