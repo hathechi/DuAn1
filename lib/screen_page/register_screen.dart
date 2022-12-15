@@ -1,19 +1,17 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:my_app_fluter/screen_page/login_screen.dart';
-import 'dart:io';
 import '../utils/push_screen.dart';
 import '../utils/showToast.dart';
-import 'home_screen.dart';
-import 'package:intl/intl.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -436,7 +434,7 @@ class _RegisterState extends State<Register> {
       showToast('Bạn không có quyền sử dụng tên "Admin" này', Colors.red);
       return;
     }
-    showLoading(4);
+    showLoading(6);
     String timeNow = DateFormat('kk:mm:ss').format(DateTime.now());
     final ref =
         FirebaseStorage.instance.ref().child("images").child(timeNow + '.jpg');

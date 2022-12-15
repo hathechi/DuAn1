@@ -5,6 +5,7 @@ import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/screen_page/enter_pin_screen.dart';
 import 'package:my_app_fluter/utils/push_screen.dart';
 
+// ignore: must_be_immutable
 class ChoocePayMent extends StatefulWidget {
   List<Cart> listCart = [];
   double tongtien;
@@ -27,7 +28,6 @@ class _ChoocePayMentState extends State<ChoocePayMent> {
   List<Payment> listPayment = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     listPayment.add(
@@ -126,7 +126,7 @@ class _ChoocePayMentState extends State<ChoocePayMent> {
                                   listCart: widget.listCart,
                                   tongtien: widget.tongtien,
                                   address: widget.address,
-                                  phantramgiam: widget.phantramgiam!,
+                                  phantramgiam: widget.phantramgiam,
                                   phoneNumber: widget.phoneNumber,
                                 )),
                             splashColor: Colors.pink,
