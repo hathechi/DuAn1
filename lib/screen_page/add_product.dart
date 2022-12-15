@@ -227,10 +227,15 @@ class _AddProductState extends State<AddProduct> {
                         alignment: Alignment.centerLeft,
                         child: Wrap(
                           children: [
-                            Text(
-                              'Detail: ${product.chitietsp?.substring(0, 50)} ...',
-                              style: const TextStyle(fontSize: 12),
-                            ),
+                            product.chitietsp!.length <= 50
+                                ? Text(
+                                    'Detail: ${product.chitietsp!}',
+                                    style: const TextStyle(fontSize: 12),
+                                  )
+                                : Text(
+                                    'Detail: ${product.chitietsp!.substring(0, 50)} ...',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
                           ],
                         ),
                       ),

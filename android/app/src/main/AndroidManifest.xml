@@ -9,7 +9,6 @@
    <application
         android:label="ShoesStore"      
         android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/launcher_icon">
         <activity
