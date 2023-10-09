@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class TestFireStore extends StatefulWidget {
   const TestFireStore({super.key});
@@ -59,7 +57,7 @@ class _TestFireStoreState extends State<TestFireStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Test'),
+        title: const Text('Test'),
       ),
       body: Column(
         children: [
@@ -84,14 +82,14 @@ class _TestFireStoreState extends State<TestFireStore> {
                             title: Text(documentSnapshot['name']),
                             subtitle: Text(documentSnapshot['age'].toString()),
                             trailing: IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               onPressed: () {
                                 deleteUser(documentSnapshot['id'].toString());
                                 // a.remove(documentSnapshot['id']);
                               },
                             ),
                             leading: IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: const Icon(Icons.edit),
                               onPressed: () {
                                 updateUser(documentSnapshot['id'].toString());
                               },
@@ -101,21 +99,19 @@ class _TestFireStoreState extends State<TestFireStore> {
                       }),
                     );
                   }
-                  return Card();
+                  return const Card();
                 }),
           ),
           Expanded(
             flex: 2,
-            child: Container(
+            child: SizedBox(
               width: 100,
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
                   // a.length == -1 ? id = 0 : id = 0;
                   id = int.parse(a[a.length - 1].id);
-                  if (id == null) {
-                    id = 0;
-                  }
+                  id ??= 0;
                   id = id + 1;
                   // i = id + 1;
                   addUser(id);
@@ -124,9 +120,9 @@ class _TestFireStoreState extends State<TestFireStore> {
                   print('ID: ' + i.toString());
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                 ),
-                child: Text('Push'),
+                child: const Text('Push'),
               ),
             ),
           )

@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/DAO/cartDAO.dart';
 import 'package:my_app_fluter/DAO/commentsDAO.dart';
@@ -107,14 +106,14 @@ class _ProductDetailState extends State<ProductDetail> {
               }
             },
             icon: _auth.currentUser != null
-                ? Badge(
-                    padding: const EdgeInsets.all(6),
+                ? badges.Badge(
+                    // padding: const EdgeInsets.all(6),
                     position: BadgePosition.topEnd(top: -15, end: -10),
                     badgeContent: Text(
                       countItemCart.toString(),
                       style: const TextStyle(color: Colors.white),
                     ),
-                    badgeColor: Colors.pink,
+                    // badgeColor: Colors.pink,
                     child: const Icon(FontAwesomeIcons.cartShopping),
                   )
                 : const Card(),
@@ -141,7 +140,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 400,
                           child: Image.network(widget.product.urlImage!),
                         ),
@@ -245,7 +244,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: Container(
+                                    child: SizedBox(
                                       height: 100,
                                       child: Column(
                                         mainAxisAlignment:
@@ -364,7 +363,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                       Expanded(
                         flex: 3,
-                        child: Container(
+                        child: SizedBox(
                           height: 56,
                           child: ElevatedButton.icon(
                             icon: const Icon(FontAwesomeIcons.cartShopping),
@@ -410,7 +409,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _chooseSize() {
-    return Container(
+    return SizedBox(
       height: 50,
       width: double.infinity,
       child: SingleChildScrollView(
@@ -458,7 +457,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _chooseColor() {
-    return Container(
+    return SizedBox(
       height: 100,
       width: double.infinity,
       child: Column(
@@ -629,7 +628,7 @@ class _BottomSheetState extends State<BottomSheet> {
                                                   child: ClipRRect(
                                                     borderRadius:
                                                         const BorderRadiusDirectional
-                                                                .all(
+                                                            .all(
                                                             Radius.circular(
                                                                 200)),
                                                     child: Image.network(

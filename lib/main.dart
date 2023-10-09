@@ -1,11 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_app_fluter/screen_page/register_screen.dart';
-import 'package:my_app_fluter/utils/push_screen.dart';
-import 'screen_page/login_screen.dart';
-import 'screen_page/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:my_app_fluter/utils/push_screen.dart';
+
+import 'screen_page/home_screen.dart';
 
 Future<void> main() async {
   //Thêm 2 dòng cho FireBase

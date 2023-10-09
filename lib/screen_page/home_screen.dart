@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app_fluter/modal/cart.dart';
 import 'package:my_app_fluter/screen_page/cart_page.dart';
@@ -19,6 +17,7 @@ import 'home_page.dart';
 
 final profileUpdateChanged = StreamController<bool>.broadcast();
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   int? currentPageIndex;
 
@@ -83,14 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           unselectedColor:
                               const Color.fromARGB(255, 243, 135, 171))
                       : SalomonBottomBarItem(
-                          icon: Badge(
-                            padding: const EdgeInsets.all(6),
+                          icon: badges.Badge(
+                            // padding: const EdgeInsets.all(6),
                             position: BadgePosition.topEnd(top: -18, end: -18),
                             badgeContent: Text(
                               listCart.length.toString(),
                               style: const TextStyle(color: Colors.white),
                             ),
-                            badgeColor: Colors.black,
+                            // badgeColor: Colors.black,
                             child: const Icon(FontAwesomeIcons.cartShopping),
                           ),
                           title: const Text('Cart'),
